@@ -1,4 +1,6 @@
 # worldfootballR
+# Jason Zivkovic
+# https://jaseziv.github.io/worldfootballR/
 
 ## Installation
 
@@ -360,13 +362,372 @@ fleetwood_standard_stats <- fb_team_player_stats(team_urls= "https://fbref.com/e
 dplyr::glimpse(fleetwood_standard_stats)
 
 #----- Can even get stats for a series of teams: -----#
-league_url <- fb_league_urls(country = "ENG", gender = "M",
-teams <- fb_teams_urls(league_url)
+#league_url <- fb_league_urls(country = "ENG", gender = "M",
+#teams <- fb_teams_urls(league_url)
 
-multiple_playing_time <- fb_team_player_stats(team_urls= teams, stat_type= "playing_time")
+#multiple_playing_time <- fb_team_player_stats(team_urls= teams, stat_type= "playing_time")
 
 
 ### 5) Player Match Logs
 
-ederson_summary <- fb_player_match_logs("https://fbref.com/en/players/3bb7b8b4/Ederson", season_end_year = 2021, stat_type = 'summary')
-dplyr::glimpse(ederson_summary)
+# ederson_summary <- fb_player_match_logs("https://fbref.com/en/players/3bb7b8b4/Ederson", season_end_year = 2021, stat_type = 'summary')
+# dplyr::glimpse(ederson_summary)
+
+
+###########################################################################
+
+## Extracting data from Understat
+
+############################################################################
+
+### Understat Helper Functions
+
+## 1) Team URLs
+
+team_urls <- understat_team_meta(team_name = c("Liverpool", "Manchester City"))
+
+## League Season-Level Data
+
+### 1) Match Results
+
+# to get the EPL results:
+epl_results <- understat_league_match_results(league = "EPL", season_start_year = 2020)
+dplyr::glimpse(epl_results)
+
+### 2) Season Shooting locations
+
+ligue1_shot_location <- understat_league_season_shots(league = "Ligue 1", season_start_year = 2020)
+
+## Match-Level Data
+
+### 1) Match Shooting Locations
+
+wba_liv_shots <- understat_match_shots(match_url = "https://understat.com/match/14789")
+dplyr::glimpse(wba_liv_shots)
+
+## Team Data
+
+### 1) Team Shooting Locations
+
+# for one team:
+man_city_shots <- understat_team_season_shots(team_url = "https://understat.com/team/Manchester_City/2020")
+dplyr::glimpse(man_city_shots)
+
+### 2) Team Stat Breakdowns
+
+#----- Can get data for single teams at a time: -----#
+team_breakdown <- understat_team_stats_breakdown(team_urls = "https://understat.com/team/Liverpool/2020")
+dplyr::glimpse(team_breakdown)
+
+
+#----- Or for multiple teams: -----#
+team_urls <- c("https://understat.com/team/Liverpool/2020",
+              "https://understat.com/team/Manchester_City/2020")
+team_breakdown <- understat_team_stats_breakdown(team_urls = team_urls)
+
+## Player Data
+
+### 1) Player Shooting Locations
+
+raheem_sterling_shots <- understat_player_shots(player_url = "https://understat.com/player/618")
+dplyr::glimpse(raheem_sterling_shots)
+
+### 2) Team Player Season Stats
+
+team_players <- understat_team_players_stats(team_url = c("https://understat.com/team/Liverpool/2020", "https://understat.com/team/Manchester_City/2020"))
+dplyr::glimpse(team_players)
+
+
+
+###########################################################################
+
+library(worldfootballR)
+library(dplyr)
+library(tidyr)
+## Extracting data from fotmob
+
+############################################################################
+
+
+### fotmob Helper Functions
+
+## League Season-Level Data
+
+### 1) Team Stats
+
+epl_team_xg_2021 <- fotmob_get_season_stats(
+  country = "ENG",
+  league_name = "Premier League",
+  season_name = "2020/2021",
+  stat_name = "Expected goals",
+  team_or_player = "team"
+)
+
+epl_team_xg_2021 %>%
+  dplyr::select(
+    league_id,
+    league_name,
+    season_id,
+    season_name,
+    team_id,
+    team_name = participant_name,
+    matches_played,
+    xg = stat_value,
+    g = sub_stat_value
+  ) %>%
+  dplyr::glimpse()
+
+fotmob_get_season_stats(
+  league_id = 47,
+  season_name = "2020/2021",
+  stat_name = "Expected goals",
+  team_or_player = "team"
+)
+
+team_xgs_2021 <- fotmob_get_season_stats(
+  country =        c("ITA",     "ESP"),
+  league_name =    c("Serie A", "LaLiga"),
+  season_name =    c("2020/2021", "2021/2022"),
+  stat_name =      c("Expected goals", "xG conceded"),
+  team_or_player = "team"
+)
+
+team_xgs_2021 %>% nrow()
+
+
+m <- lubridate::month(Sys.Date())
+if(m >= 1 && m <= 5) {
+  fotmob_get_season_stats(
+    league_id = 42,
+    season_name = "2020/2021",
+    stat_name = "Expected goals",
+    team_or_player = "team"
+  )
+}
+
+
+### 2) Player Stats
+
+epl_player_xg_2021 <- fotmob_get_season_stats(
+  country = "ENG",
+  league_name = "Premier League",
+  season = "2020/2021",
+  stat_name = "Expected goals (xG)",
+  team_or_player = "player"
+)
+
+epl_player_xg_2021 %>%
+  dplyr::select(
+    league_id,
+    league_name,
+    season_id,
+    season_name,
+    team_id,
+    ## NOTE: particiant_id is a typo on behalf of fotmob! We leave it as is.
+    player_id = particiant_id,
+    player_name = participant_name,
+    minutes_played,
+    matches_played,
+    xg = stat_value,
+    g = sub_stat_value
+  ) %>%
+  dplyr::glimpse()
+
+
+### 3) Match Results
+
+
+league_matches <- fotmob_get_league_matches(
+  country =     c("ENG",            "ESP"   ),
+  league_name = c("Premier League", "LaLiga")
+)
+
+league_matches_unnested <- league_matches %>%
+  dplyr::select(match_id = id, home, away) %>%
+  tidyr::unnest_wider(c(home, away), names_sep = "_")
+dplyr::glimpse(league_matches_unnested)
+
+
+results <- fotmob_get_matches_by_date(date = c("20210925", "20210926"))
+dplyr::glimpse(results)
+
+
+results <- fotmob_get_matches_by_date("20220412")
+results %>%
+  dplyr::filter(name == "Champions League Final Stage", ccode == "INT")
+
+
+### 4) Standings
+
+league_tables <- fotmob_get_league_tables(
+  country =     c("ENG",            "ESP"   ),
+  league_name = c("Premier League", "LaLiga")
+)
+# or
+# league_tables <- fotmob_get_league_tables(league_id = c(47, 87))
+
+away_league_tables <- league_tables %>%
+  dplyr::filter(table_type == "away")
+dplyr::glimpse(away_league_tables)
+
+
+m <- lubridate::month(Sys.Date())
+if(m >= 1 && m <= 5) {
+  cl_table <- fotmob_get_league_tables(league_id = 42)
+  
+  cl_table %>%
+    dplyr::filter(table_type == "all") %>% 
+    dplyr::glimpse()
+}
+
+
+## Match-Level Data
+
+
+### 1) Match Shooting Locations
+
+
+fotmob_matches <- c(3609994, 3610132)
+match_details <- fotmob_get_match_details(fotmob_matches)
+dplyr::glimpse(match_details)
+
+
+### 2) Players
+
+
+players <- fotmob_get_match_players(fotmob_matches)
+dplyr::glimpse(players)
+
+
+####################################################################################
+
+# Extracting data from FBref for International Matches
+
+####################################################################################
+
+### Helper Functions
+
+### 1) Get match urls
+
+wc_2018_urls <- get_match_urls(country = "", gender = "M", season_end_year = 2018, tier = "", non_dom_league_url = "https://fbref.com/en/comps/1/history/World-Cup-Seasons")
+
+friendly_int_2021_urls <- get_match_urls(country = "", gender = "M", season_end_year = 2021, tier = "", non_dom_league_url = "https://fbref.com/en/comps/218/history/Friendlies-M-Seasons")
+
+euro_2021_urls <- get_match_urls(country = "", gender = "M", season_end_year = 2021, tier = "", non_dom_league_url = "https://fbref.com/en/comps/676/history/European-Championship-Seasons")
+
+copa_2019_urls <- get_match_urls(country = "", gender = "M", season_end_year = 2019, tier = "", non_dom_league_url = "https://fbref.com/en/comps/685/history/Copa-America-Seasons")
+
+
+## Match-Level Data
+
+### 1) Get match results
+
+# euro 2016 results
+euro_2016_results <- get_match_results(country = "", gender = "M", season_end_year = 2016, tier = "", non_dom_league_url = "https://fbref.com/en/comps/676/history/European-Championship-Seasons")
+
+# 2019 Copa America results:
+copa_2019_results <- get_match_results(country = "", gender = "M", season_end_year = 2019, non_dom_league_url = "https://fbref.com/en/comps/685/history/Copa-America-Seasons")
+
+# for international friendlies:
+international_results <- get_match_results(country = "", gender = "M", season_end_year = 2021, tier = "", non_dom_league_url = "https://fbref.com/en/comps/218/history/Friendlies-M-Seasons")
+
+
+### 2) Get match report
+
+# function to extract match report data for 2018 world cup
+wc_2018_report <- get_match_report(match_url = wc_2018_urls)
+# function to extract match report data for 2021 international friendlies
+friendlies_report <- get_match_report(match_url = friendly_int_2021_urls)
+
+### 3) Get match summaries
+
+# first get the URLs for the 2016 Euros
+euro_2016_match_urls <- get_match_urls(country = "", gender = "M", season_end_year = 2016, tier = "", non_dom_league_url = "https://fbref.com/en/comps/676/history/European-Championship-Seasons")
+
+# then pass these to the function to get match summaries:
+euro_2016_events <- get_match_summary(euro_2016_match_urls)
+
+### 4) Get match lineups
+
+# function to extract match lineups
+copa_2019_lineups <- get_match_lineups(match_url = copa_2019_urls)
+
+### 5) Get shooting and shot creation events
+
+shots_wc_2018 <- get_match_shooting(wc_2018_urls)
+
+### 6) Get advanced match statistics
+
+advanced_match_stats_player <- get_advanced_match_stats(match_url = wc_2018_urls, stat_type = "possession", team_or_player = "player")
+
+advanced_match_stats_team <- get_advanced_match_stats(match_url = wc_2018_urls, stat_type = "passing_types", team_or_player = "team")
+
+
+
+###########################################################################################
+
+# Load Scraped Data Functions
+
+###########################################################################################
+
+library(worldfootballR)
+library(dplyr)
+
+
+## Load FBref
+
+### 1) Load FBref match results
+
+eng_match_results <- load_match_results(country = "ENG", gender = c("M", "F"), season_end_year = c(2020:2022), tier = "1st")
+dplyr::glimpse(eng_match_results)
+
+### 2) Load FBref match results for Cups and International Comps
+
+load_match_comp_results()
+
+cups <- c("FIFA Women's World Cup","FIFA World Cup")
+world_cups <- load_match_comp_results(comp_name = cups)
+dplyr::glimpse(world_cups)
+
+# 3) Load FBref big 5 league advanced season stats
+
+all_season_player <- load_fb_big5_advanced_season_stats(stat_type = "defense", team_or_player = "player")
+current_season_player <- load_fb_big5_advanced_season_stats(season_end_year = 2022, stat_type = "defense", team_or_player = "player")
+
+all_season_team <- load_fb_big5_advanced_season_stats(stat_type = "defense", team_or_player = "team")
+current_season_team <- load_fb_big5_advanced_season_stats(season_end_year = 2022, stat_type = "defense", team_or_player = "team")
+
+## Load Understat
+
+### 1) Load League Shots
+
+serie_a_shot_locations <- load_understat_league_shots(league = "Serie A")
+dplyr::glimpse(serie_a_shot_locations)
+
+
+## Load fotmob
+
+### 1) Load fotmob Big 5 Match Shots
+
+epl_match_details <- load_fotmob_match_details(
+  country = "ENG",
+  league_name = "Premier League"
+)
+## or
+load_fotmob_match_details(league_id = 47)
+dplyr::glimpse(epl_match_details)
+
+## multiple leagues at once
+epl_ll_match_details <- load_fotmob_match_details(league_id = c(47, 87))
+
+
+epl_matches <- load_fotmob_matches_by_date(
+  country = "ENG",
+  league_name = "Premier League"
+)
+dplyr::glimpse(epl_matches)
+
+
+## multiple leagues at once
+epl_ll_matches <- load_fotmob_matches_by_date(league_id = c(47, 87))
+
