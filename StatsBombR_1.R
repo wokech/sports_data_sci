@@ -705,7 +705,7 @@ Value") + #5
 # #5: Same as last time but worth pointing out that
 # 'name' allows you to change the title of a legend from
 # within the gradient setting.
-  
+
 scale_shape_manual(values = c("Head" = 21, "Right Foot" = 23, "Left Foot" = 24), name ="") + #6
 
 guides(fill = guide_colourbar(title.position = "top"),
