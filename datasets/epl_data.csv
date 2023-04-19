@@ -1,0 +1,241 @@
+"","Season","Rank","Club","Points"
+"1",2019,1,"Liverpool",99
+"2",2019,2,"Manchester City",81
+"3",2019,3,"Manchester United",66
+"4",2019,4,"Chelsea",66
+"5",2019,5,"Leicester City",62
+"6",2019,6,"Tottenham Hotspur",59
+"7",2019,7,"Wolverhampton Wanderers",59
+"8",2019,8,"Arsenal",56
+"9",2019,9,"Sheffield United",54
+"10",2019,10,"Burnley",54
+"11",2019,11,"Southampton",52
+"12",2019,12,"Everton",49
+"13",2019,13,"Newcastle United",44
+"14",2019,14,"Crystal Palace",43
+"15",2019,15,"Brighton & Hove Albion",41
+"16",2019,16,"West Ham United",39
+"17",2019,17,"Aston Villa",35
+"18",2019,18,"AFC Bournemouth",34
+"19",2019,19,"Watford",34
+"20",2019,20,"Norwich City",21
+"21",2018,1,"Manchester City",98
+"22",2018,2,"Liverpool",97
+"23",2018,3,"Chelsea",72
+"24",2018,4,"Tottenham Hotspur",71
+"25",2018,5,"Arsenal",70
+"26",2018,6,"Manchester United",66
+"27",2018,7,"Wolverhampton Wanderers",57
+"28",2018,8,"Everton",54
+"29",2018,9,"Leicester City",52
+"30",2018,10,"West Ham United",52
+"31",2018,11,"Watford",50
+"32",2018,12,"Crystal Palace",49
+"33",2018,13,"Newcastle United",45
+"34",2018,14,"AFC Bournemouth",45
+"35",2018,15,"Burnley",40
+"36",2018,16,"Southampton",39
+"37",2018,17,"Brighton & Hove Albion",36
+"38",2018,18,"Cardiff City",34
+"39",2018,19,"Fulham",26
+"40",2018,20,"Huddersfield Town",16
+"41",2017,1,"Manchester City",100
+"42",2017,2,"Manchester United",81
+"43",2017,3,"Tottenham Hotspur",77
+"44",2017,4,"Liverpool",75
+"45",2017,5,"Chelsea",70
+"46",2017,6,"Arsenal",63
+"47",2017,7,"Burnley",54
+"48",2017,8,"Everton",49
+"49",2017,9,"Leicester City",47
+"50",2017,10,"Newcastle United",44
+"51",2017,11,"Crystal Palace",44
+"52",2017,12,"AFC Bournemouth",44
+"53",2017,13,"West Ham United",42
+"54",2017,14,"Watford",41
+"55",2017,15,"Brighton & Hove Albion",40
+"56",2017,16,"Huddersfield Town",37
+"57",2017,17,"Southampton",36
+"58",2017,18,"Swansea City",33
+"59",2017,19,"Stoke City",33
+"60",2017,20,"West Bromwich Albion",31
+"61",2016,1,"Chelsea",93
+"62",2016,2,"Tottenham Hotspur",86
+"63",2016,3,"Manchester City",78
+"64",2016,4,"Liverpool",76
+"65",2016,5,"Arsenal",75
+"66",2016,6,"Manchester United",69
+"67",2016,7,"Everton",61
+"68",2016,8,"Southampton",46
+"69",2016,9,"AFC Bournemouth",46
+"70",2016,10,"West Bromwich Albion",45
+"71",2016,11,"West Ham United",45
+"72",2016,12,"Leicester City",44
+"73",2016,13,"Stoke City",44
+"74",2016,14,"Crystal Palace",41
+"75",2016,15,"Swansea City",41
+"76",2016,16,"Burnley",40
+"77",2016,17,"Watford",40
+"78",2016,18,"Hull City",34
+"79",2016,19,"Middlesbrough",28
+"80",2016,20,"Sunderland",24
+"81",2015,1,"Leicester City",81
+"82",2015,2,"Arsenal",71
+"83",2015,3,"Tottenham Hotspur",70
+"84",2015,4,"Manchester City",66
+"85",2015,5,"Manchester United",66
+"86",2015,6,"Southampton",63
+"87",2015,7,"West Ham United",62
+"88",2015,8,"Liverpool",60
+"89",2015,9,"Stoke City",51
+"90",2015,10,"Chelsea",50
+"91",2015,11,"Everton",47
+"92",2015,12,"Swansea City",47
+"93",2015,13,"Watford",45
+"94",2015,14,"West Bromwich Albion",43
+"95",2015,15,"Crystal Palace",42
+"96",2015,16,"AFC Bournemouth",42
+"97",2015,17,"Sunderland",39
+"98",2015,18,"Newcastle United",37
+"99",2015,19,"Norwich City",34
+"100",2015,20,"Aston Villa",17
+"101",2014,1,"Chelsea",87
+"102",2014,2,"Manchester City",79
+"103",2014,3,"Arsenal",75
+"104",2014,4,"Manchester United",70
+"105",2014,5,"Tottenham Hotspur",64
+"106",2014,6,"Liverpool",62
+"107",2014,7,"Southampton",60
+"108",2014,8,"Swansea City",56
+"109",2014,9,"Stoke City",54
+"110",2014,10,"Crystal Palace",48
+"111",2014,11,"Everton",47
+"112",2014,12,"West Ham United",47
+"113",2014,13,"West Bromwich Albion",44
+"114",2014,14,"Leicester City",41
+"115",2014,15,"Newcastle United",39
+"116",2014,16,"Sunderland",38
+"117",2014,17,"Aston Villa",38
+"118",2014,18,"Hull City",35
+"119",2014,19,"Burnley",33
+"120",2014,20,"Queens Park Rangers",30
+"121",2013,1,"Manchester City",86
+"122",2013,2,"Liverpool",84
+"123",2013,3,"Chelsea",83
+"124",2013,4,"Arsenal",79
+"125",2013,5,"Everton",72
+"126",2013,6,"Tottenham Hotspur",69
+"127",2013,7,"Manchester United",64
+"128",2013,8,"Southampton",56
+"129",2013,9,"Stoke City",50
+"130",2013,10,"Newcastle United",49
+"131",2013,11,"Crystal Palace",45
+"132",2013,12,"Swansea City",42
+"133",2013,13,"West Ham United",40
+"134",2013,14,"Sunderland",38
+"135",2013,15,"Aston Villa",38
+"136",2013,16,"Hull City",37
+"137",2013,17,"West Bromwich Albion",36
+"138",2013,18,"Norwich City",33
+"139",2013,19,"Fulham",32
+"140",2013,20,"Cardiff City",30
+"141",2012,1,"Manchester United",89
+"142",2012,2,"Manchester City",78
+"143",2012,3,"Chelsea",75
+"144",2012,4,"Arsenal",73
+"145",2012,5,"Tottenham Hotspur",72
+"146",2012,6,"Everton",63
+"147",2012,7,"Liverpool",61
+"148",2012,8,"West Bromwich Albion",49
+"149",2012,9,"Swansea City",46
+"150",2012,10,"West Ham United",46
+"151",2012,11,"Norwich City",44
+"152",2012,12,"Fulham",43
+"153",2012,13,"Stoke City",42
+"154",2012,14,"Southampton",41
+"155",2012,15,"Aston Villa",41
+"156",2012,16,"Newcastle United",41
+"157",2012,17,"Sunderland",39
+"158",2012,18,"Wigan Athletic",36
+"159",2012,19,"Reading",28
+"160",2012,20,"Queens Park Rangers",25
+"161",2011,1,"Manchester City",89
+"162",2011,2,"Manchester United",89
+"163",2011,3,"Arsenal",70
+"164",2011,4,"Tottenham Hotspur",69
+"165",2011,5,"Newcastle United",65
+"166",2011,6,"Chelsea",64
+"167",2011,7,"Everton",56
+"168",2011,8,"Liverpool",52
+"169",2011,9,"Fulham",52
+"170",2011,10,"West Bromwich Albion",47
+"171",2011,11,"Swansea City",47
+"172",2011,12,"Norwich City",47
+"173",2011,13,"Sunderland",45
+"174",2011,14,"Stoke City",45
+"175",2011,15,"Wigan Athletic",43
+"176",2011,16,"Aston Villa",38
+"177",2011,17,"Queens Park Rangers",37
+"178",2011,18,"Bolton Wanderers",36
+"179",2011,19,"Blackburn Rovers",31
+"180",2011,20,"Wolverhampton Wanderers",25
+"181",2010,1,"Manchester United",80
+"182",2010,2,"Chelsea",71
+"183",2010,3,"Manchester City",71
+"184",2010,4,"Arsenal",68
+"185",2010,5,"Tottenham Hotspur",62
+"186",2010,6,"Liverpool",58
+"187",2010,7,"Everton",54
+"188",2010,8,"Fulham",9
+"189",2010,9,"Aston Villa",48
+"190",2010,10,"Sunderland",47
+"191",2010,11,"West Bromwich Albion",47
+"192",2010,12,"Newcastle United",46
+"193",2010,13,"Stoke City",46
+"194",2010,14,"Bolton Wanderers",46
+"195",2010,15,"Blackburn Rovers",43
+"196",2010,16,"Wigan Athletic",42
+"197",2010,17,"Wolverhampton Wanderers",40
+"198",2010,18,"Birmingham City",39
+"199",2010,19,"Blackpool",39
+"200",2010,20,"West Ham United",33
+"201",2009,1,"Chelsea",86
+"202",2009,2,"Manchester United",85
+"203",2009,3,"Arsenal",75
+"204",2009,4,"Tottenham Hotspur",70
+"205",2009,5,"Manchester City",67
+"206",2009,6,"Aston Villa",64
+"207",2009,7,"Liverpool",63
+"208",2009,8,"Everton",61
+"209",2009,9,"Birmingham City",50
+"210",2009,10,"Blackburn Rovers",50
+"211",2009,11,"Stoke City",47
+"212",2009,12,"Fulham",46
+"213",2009,13,"Sunderland",44
+"214",2009,14,"Bolton Wanderers",39
+"215",2009,15,"Wolverhampton Wanderers",38
+"216",2009,16,"Wigan Athletic",36
+"217",2009,17,"West Ham United",35
+"218",2009,18,"Burnley",30
+"219",2009,19,"Hull City",30
+"220",2009,20,"Portsmouth",19
+"221",2008,1,"Manchester United",90
+"222",2008,2,"Liverpool",86
+"223",2008,3,"Chelsea",83
+"224",2008,4,"Arsenal",72
+"225",2008,5,"Everton",63
+"226",2008,6,"Aston Villa",62
+"227",2008,7,"Fulham",53
+"228",2008,8,"Tottenham Hotspur",51
+"229",2008,9,"West Ham United",51
+"230",2008,10,"Manchester City",50
+"231",2008,11,"Wigan Athletic",45
+"232",2008,12,"Stoke City",45
+"233",2008,13,"Bolton Wanderers",41
+"234",2008,14,"Portsmouth",41
+"235",2008,15,"Blackburn Rovers",41
+"236",2008,16,"Sunderland",36
+"237",2008,17,"Hull City",35
+"238",2008,18,"Newcastle United",34
+"239",2008,19,"Middlesbrough",32
+"240",2008,20,"West Bromwich Albion",32
