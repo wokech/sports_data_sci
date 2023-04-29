@@ -1,6 +1,9 @@
 # FIFA World Rankings and Market Value
 # April 6, 2023 Ranking
 
+# Data: https://www.transfermarkt.com/wettbewerbe/fifa
+# Source: https://www.datakwery.com/post/2020-07-11-scientific-notation-in-r/
+
 # Load the required libraries
 library(tidyverse)
 library(tidyr)
@@ -103,9 +106,31 @@ fifa_tm_clean_conmebol <- fifa_tm_clean %>%
 
 fifa_tm_clean %>%
   ggplot(aes(number, average_player_cost)) + 
-  geom_point() +
-  geom_smooth(method = "lm") +
-  scale_y_log10()
+  geom_point(aes(color= confederation), size = 2) +
+  geom_text_repel(aes(label = ifelse(number < 5, nation, "")), size = 5) +
+  geom_text_repel(aes(label = ifelse(number >= 100 & number < 105, nation, "")), size = 5) +
+  geom_text_repel(aes(label = ifelse(number >= 200 & number < 205, nation, "")), size = 5) +
+  labs(x = "FIFA Ranking (April 2023)",
+       y = "Average Player Value (Euros)",
+       title = "Highly ranked soccer teams have the highest average player values",
+       #subtitle = "",
+       caption = "Data Source: transfermarkt\nBy: @willyokech") +
+  theme_classic() +
+  scale_y_log10(labels  = 
+                  label_number(scale = 1e-6, prefix = "$", suffix = "m", accuracy = 0.01)) + 
+  theme(axis.title.x =element_text(size = 20, vjust = -2),
+        axis.title.y =element_text(size = 20,  vjust = 2),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
+        plot.title = element_text(family="Helvetica", face="bold", size = 28),
+        plot.subtitle = element_text(family="Helvetica", face="bold", size = 15),
+        plot.caption = element_text(family = "Helvetica",size = 14, face = "bold"),
+        plot.background = element_rect(fill = "azure2", colour = "azure2"),
+        panel.background = element_rect(fill = "azure2", colour = "azure2"),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 14),
+        legend.background = element_rect("azure2"),
+        legend.position = "right")
 
 fifa_tm_clean_uefa %>%
   ggplot(aes(number, average_player_cost)) + 
@@ -199,40 +224,40 @@ fifa_tm_clean_conmebol %>%
 amu <- c("Algeria", "Libya", "Mauritania", "Morocco", "Tunisia")
 
 # Common Market for Eastern and Southern Africa (COMESA)
-comesa <- c("Burundi", "Comoros", "Democratic Republic of the Congo", "Djibouti", "Egypt", "Eritrea", 
-                                 "Eswatini", "Ethiopia", "Kenya", "Libya", "Madagascar", "Malawi", "Mauritius", 
-                                 "Rwanda", "Seychelles", "Somalia", "Sudan", "Tunisia", "Uganda", 
-                                 "Zambia", "Zimbabwe")
+comesa <- c("Burundi", "Comoros", "Democratic Republic of the Congo", "Djibouti", 
+            "Egypt", "Eritrea", "Eswatini", "Ethiopia", "Kenya", "Libya", "Madagascar", 
+            "Malawi", "Mauritius", "Rwanda", "Seychelles", "Somalia", "Sudan", 
+            "Tunisia", "Uganda", "Zambia", "Zimbabwe")
 
 # Community of Sahel-Saharan States (CEN-SAD)
 cen_sad <- c("Benin", "Burkina Faso", "Cape Verde", "Central African Republic", "Chad", 
-                                  "Comoros", "Djibouti", "Egypt", "Eritrea", "Gambia", "Ghana", "Guinea", "Guinea-Bissau", 
-                                  "Ivory Coast", "Kenya", "Liberia", "Libya", "Mali", "Mauritania", "Morocco", "Niger", 
-                                  "Nigeria", "Sao Tome and Principe", "Senegal", "Sierra Leone", "Somalia", 
-                                  "Sudan", "Togo", "Tunisia")
+             "Comoros", "Djibouti", "Egypt", "Eritrea", "Gambia", "Ghana", "Guinea", 
+             "Guinea-Bissau", "Ivory Coast", "Kenya", "Liberia", "Libya", "Mali", 
+             "Mauritania", "Morocco", "Niger", "Nigeria", "Sao Tome and Principe", 
+             "Senegal", "Sierra Leone", "Somalia", "Sudan", "Togo", "Tunisia")
 
 # East African Community (EAC)
-eac <- c("Burundi", "Democratic Republic of the Congo", "Kenya", "Rwanda", 
-                              "South Sudan", "Tanzania", "Uganda")
+eac <- c("Burundi", "Democratic Republic of the Congo", "Kenya", 
+         "Rwanda", "South Sudan", "Tanzania", "Uganda")
 
 # Economic Community of Central African States (ECCAS/CEEAC)
 eccas <- c("Angola", "Burundi", "Cameroon", "Central African Republic", "Chad", 
-                                "Democratic Republic of the Congo", "Equatorial Guinea", "Gabon", 
-                                "Republic of Congo", "Rwanda", "Sao Tome and Principe")
+           "Democratic Republic of the Congo", "Equatorial Guinea", "Gabon", 
+           "Republic of Congo", "Rwanda", "Sao Tome and Principe")
 
 # Economic Community of West African States (ECOWAS)
-ecowas <- c("Benin", "Burkina Faso", "Cape Verde", "Ivory Coast", "Gambia", "Ghana", 
-                                 "Guinea", "Guinea-Bissau", "Liberia", "Mali", "Niger", "Nigeria", 
-                                 "Senegal", "Sierra Leone", "Togo")
+ecowas <- c("Benin", "Burkina Faso", "Cape Verde", "Ivory Coast", "Gambia", 
+            "Ghana", "Guinea", "Guinea-Bissau", "Liberia", "Mali", "Niger", 
+            "Nigeria", "Senegal", "Sierra Leone", "Togo")
 
 # Intergovernmental Authority on Development (IGAD)
-igad <- c("Djibouti", "Eritrea", "Ethiopia", "Kenya", "Somalia", "South Sudan", 
-                               "Sudan", "Uganda")
+igad <- c("Djibouti", "Eritrea", "Ethiopia", "Kenya", 
+          "Somalia", "South Sudan", "Sudan", "Uganda")
 
 # Southern African Development Community (SADC)
 sadc <- c("Angola", "Botswana", "Comoros", "Democratic Republic of the Congo", "Eswatini", 
-                               "Lesotho", "Madagascar", "Malawi", "Mauritius", "Mozambique", "Namibia", 
-                               "Seychelles", "South Africa", "Tanzania", "Zambia", "Zimbabwe")
+          "Lesotho", "Madagascar", "Malawi", "Mauritius", "Mozambique", "Namibia", 
+          "Seychelles", "South Africa", "Tanzania", "Zambia", "Zimbabwe")
 
 ####################
 # SOME MISSING DATA - NEEDS CLEANING!!
