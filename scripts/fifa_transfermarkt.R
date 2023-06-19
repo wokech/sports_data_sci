@@ -28,7 +28,6 @@ library(stringr)
 
 # Load the required data
 
-library(readxl)
 fifa_tm <- read_excel("datasets/FIFA_Ranking_Apr_6_2023.xlsx")
 
 fifa_tm_clean <- fifa_tm %>%
@@ -113,16 +112,16 @@ fifa_tm_clean %>%
   labs(x = "FIFA Ranking (April 2023)",
        y = "Average Player Value (Euros)",
        title = "Highly ranked soccer teams have the highest average player values",
-       #subtitle = "",
+       subtitle = "Comparing the FIFA rankings and average player values globally",
        caption = "Data Source: transfermarkt\nBy: @willyokech") +
   theme_classic() +
   scale_y_log10(labels  = 
                   label_number(scale = 1e-6, prefix = "$", suffix = "m", accuracy = 0.01)) + 
-  theme(axis.title.x =element_text(size = 20, vjust = -2),
-        axis.title.y =element_text(size = 20,  vjust = 2),
+  theme(axis.title.x =element_text(size = 18, vjust = -2),
+        axis.title.y =element_text(size = 18,  vjust = 2),
         axis.text.x = element_text(size = 15),
         axis.text.y = element_text(size = 15),
-        plot.title = element_text(family="Helvetica", face="bold", size = 28),
+        plot.title = element_text(family="Helvetica", face="bold", size = 24),
         plot.subtitle = element_text(family="Helvetica", face="bold", size = 15),
         plot.caption = element_text(family = "Helvetica",size = 14, face = "bold"),
         plot.background = element_rect(fill = "azure2", colour = "azure2"),
@@ -131,6 +130,8 @@ fifa_tm_clean %>%
         legend.text = element_text(size = 14),
         legend.background = element_rect("azure2"),
         legend.position = "right")
+
+ggsave("images/fifa_tm/all_teams_1.png", width = 12, height = 8, dpi = 600)
 
 fifa_tm_clean_uefa %>%
   ggplot(aes(number, average_player_cost)) + 
@@ -143,6 +144,7 @@ fifa_tm_clean_caf %>%
   geom_point() +
   geom_smooth(method = "lm") +
   scale_y_log10()
+
 
 fifa_tm_clean_afc %>%
   ggplot(aes(number, average_player_cost)) + 
@@ -246,7 +248,7 @@ eccas <- c("Angola", "Burundi", "Cameroon", "Central African Republic", "Chad",
            "Republic of Congo", "Rwanda", "Sao Tome and Principe")
 
 # Economic Community of West African States (ECOWAS)
-ecowas <- c("Benin", "Burkina Faso", "Cape Verde", "Ivory Coast", "Gambia", 
+ecowas <- c("Benin", "Burkina Faso", "Cape Verde", "Ivory Coast", "The Gambia", 
             "Ghana", "Guinea", "Guinea-Bissau", "Liberia", "Mali", "Niger", 
             "Nigeria", "Senegal", "Sierra Leone", "Togo")
 
@@ -265,32 +267,79 @@ sadc <- c("Angola", "Botswana", "Comoros", "Democratic Republic of the Congo", "
 
 # Arab Maghreb Union (AMU)
 fifa_tm_clean_amu <- fifa_tm_clean %>%
-  filter(nation %in% amu)
+  filter(nation %in% amu)  %>%
+  mutate(region = "AMU")
 
 # Common Market for Eastern and Southern Africa (COMESA)
 fifa_tm_clean_comesa <- fifa_tm_clean %>%
-  filter(nation %in% comesa)
+  filter(nation %in% comesa)  %>%
+  mutate(region = "COMESA")
 
 # Community of Sahel-Saharan States (CEN-SAD)
 fifa_tm_clean_cen_sad <- fifa_tm_clean %>%
-  filter(nation %in% cen_sad) 
+  filter(nation %in% cen_sad)  %>%
+  mutate(region = "CEN_SAD")
 
 # East African Community (EAC)
 fifa_tm_clean_eac <- fifa_tm_clean %>%
-  filter(nation %in% eac) 
+  filter(nation %in% eac)  %>%
+  mutate(region = "EAC")
 
 # Economic Community of Central African States (ECCAS/CEEAC)
 fifa_tm_clean_eccas <- fifa_tm_clean %>%
-  filter(nation %in% eccas) 
+  filter(nation %in% eccas)  %>%
+  mutate(region = "ECCAS")
 
 # Economic Community of West African States (ECOWAS)
 fifa_tm_clean_ecowas <- fifa_tm_clean %>%
-  filter(nation %in% ecowas) 
+  filter(nation %in% ecowas) %>%
+  mutate(region = "ECOWAS")
 
 # Intergovernmental Authority on Development (IGAD)
 fifa_tm_clean_igad <- fifa_tm_clean %>%
-  filter(nation %in% igad) 
+  filter(nation %in% igad)  %>%
+  mutate(region = "IGAD")
 
 # Southern African Development Community (SADC)
-sadcfifa_tm_clean_sadc <- fifa_tm_clean %>%
-  filter(nation %in% sadc) 
+fifa_tm_clean_sadc <- fifa_tm_clean %>%
+  filter(nation %in% sadc)  %>%
+  mutate(region = "SADC")
+
+## Comparison of EAC and ECOWAS
+
+fifa_tm_clean_eac_ecowas <- rbind(fifa_tm_clean_eac, fifa_tm_clean_ecowas)
+
+fifa_tm_clean_eac_ecowas %>%
+  group_by(region) %>%
+  summarise(average_region_cost = sum(total_player_cost)/sum(squad_size))
+
+fifa_tm_clean_eac_ecowas %>%
+  ggplot(aes(number, average_player_cost)) + 
+  geom_point(aes(color= region), size = 3) +
+  geom_text_repel(aes(label = ifelse(number < 85, nation, "")), size = 5) +
+  geom_text_repel(aes(label = ifelse(number >= 85 & number < 130, nation, "")), size = 5) +
+  geom_text_repel(aes(label = ifelse(number >= 130 & number < 205, nation, "")), size = 5) +
+  labs(x = "FIFA Ranking (April 2023)",
+       y = "Average Player Value (Euros)",
+       title = "West Africa dominates the East-West soccer battle",
+       subtitle = "Comparing the FIFA rankings and average player values for East and West African soccer teams",
+       caption = "Data Source: transfermarkt\nBy: @willyokech") +
+  theme_classic() +
+  scale_y_log10(labels  = 
+                  label_number(scale = 1e-6, prefix = "$", suffix = "m", accuracy = 0.01)) +
+  scale_color_discrete(labels = c('East Africa', 'West Africa')) +
+  theme(axis.title.x =element_text(size = 18, vjust = -2),
+        axis.title.y =element_text(size = 18,  vjust = 2),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
+        plot.title = element_text(family="Helvetica", face="bold", size = 24),
+        plot.subtitle = element_text(family="Helvetica", face="bold", size = 15),
+        plot.caption = element_text(family = "Helvetica",size = 12, face = "bold"),
+        plot.background = element_rect(fill = "bisque1", colour = "bisque1"),
+        panel.background = element_rect(fill = "bisque1", colour = "bisque1"),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 14),
+        legend.background = element_rect("bisque1"),
+        legend.position = "right")
+
+ggsave("images/fifa_tm/west_east_1.png", width = 12, height = 8, dpi = 600)
