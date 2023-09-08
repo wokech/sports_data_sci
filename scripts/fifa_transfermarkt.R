@@ -342,4 +342,4 @@ fifa_tm_clean_eac_ecowas %>%
         legend.background = element_rect("bisque1"),
         legend.position = "right")
 
-ggsave("images/fifa_tm/west_east_1.png", width = 12, height = 8, dpi = 600)
+#ggsave("images/fifa_tm/west_east_1.png", width = 12, height = 8, dpi = 600)
