@@ -107,7 +107,7 @@ fifa_tm_clean_conmebol <- fifa_tm_clean %>%
 
 fifa_tm_clean %>%
   ggplot(aes(number, average_player_cost)) + 
-  geom_point(aes(color= confederation), size = 4) +
+  geom_point(aes(color= confederation), size = 5) +
   geom_text_repel(aes(label = ifelse(number < 5, nation, "")), size = 10) +
   geom_text_repel(aes(label = ifelse(number >= 100 & number < 105, nation, "")), size = 10) +
   geom_text_repel(aes(label = ifelse(number >= 200 & number < 205, nation, "")), size = 10) +
@@ -146,7 +146,7 @@ ggsave("images/fifa_tm/all_teams_square.png", width = 12, height = 12, dpi = 72)
 
 fifa_tm_clean %>%
   ggplot(aes(number, average_player_cost)) + 
-  geom_point(aes(color= confederation), size = 4) +
+  geom_point(aes(color= confederation), size = 5) +
   geom_text_repel(aes(label = ifelse(number < 5, nation, "")), size = 10) +
   geom_text_repel(aes(label = ifelse(number >= 100 & number < 105, nation, "")), size = 10) +
   geom_text_repel(aes(label = ifelse(number >= 200 & number < 205, nation, "")), size = 10) +
@@ -366,12 +366,8 @@ fifa_tm_clean_eac_ecowas %>%
 
 fifa_tm_clean_eac_ecowas %>%
   ggplot(aes(number, average_player_cost)) + 
-  geom_point(aes(color= region), size = 4) +
-  geom_text_repel(aes(label = ifelse(number < 85, nation, "")), size = 8, 
-                  min.segment.length = 0, seed = 42, box.padding = 0.5) +
-  geom_text_repel(aes(label = ifelse(number >= 85 & number < 130, nation, "")), size = 8,
-                  min.segment.length = 0, seed = 42, box.padding = 0.5) +
-  geom_text_repel(aes(label = ifelse(number >= 130 & number < 205, nation, "")), size = 8,
+  geom_point(aes(color= region), size = 5) +
+  geom_text_repel(aes(label = nation), size = 10,
                   min.segment.length = 0, seed = 42, box.padding = 0.5) +
   labs(x = "FIFA Ranking (April 2023)",
        y = "Average Player Value (Euros)",
@@ -405,12 +401,8 @@ ggsave("images/fifa_tm/west_east_square.png", width = 12, height = 12, dpi = 72)
 
 fifa_tm_clean_eac_ecowas %>%
   ggplot(aes(number, average_player_cost)) + 
-  geom_point(aes(color= region), size = 4) +
-  geom_text_repel(aes(label = ifelse(number < 85, nation, "")), size = 8,
-                  min.segment.length = 0, seed = 42, box.padding = 0.5) +
-  geom_text_repel(aes(label = ifelse(number >= 85 & number < 130, nation, "")), size = 8,
-                  min.segment.length = 0, seed = 42, box.padding = 0.5) +
-  geom_text_repel(aes(label = ifelse(number >= 130 & number < 205, nation, "")), size = 8,
+  geom_point(aes(color= region), size = 5) +
+  geom_text_repel(aes(label = nation), size = 10,
                   min.segment.length = 0, seed = 42, box.padding = 0.5) +
   labs(x = "FIFA Ranking (April 2023)",
        y = "Average Player Value (Euros)",
