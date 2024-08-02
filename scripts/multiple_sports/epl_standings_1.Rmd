@@ -16,7 +16,7 @@ epl_data <- read.csv(url)
 Save the data in the project folder
 
 ```{r}
-write.csv(epl_data, file = "epl_data.csv")
+write.csv(epl_data, file = "datasets/epl_data.csv")
 ```
 
 Load the libraries and set the theme
