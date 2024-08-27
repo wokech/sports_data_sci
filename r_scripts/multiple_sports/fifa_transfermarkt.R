@@ -138,7 +138,7 @@ fifa_tm_clean %>%
         legend.box.just = "right",
         legend.margin = margin(6, 6, 6, 6))
 
-ggsave("images/fifa_tm/all_teams_square.png", width = 12, height = 12, dpi = 72)
+# ggsave("images/fifa_tm/all_teams_square.png", width = 12, height = 12, dpi = 72)
 
 ################ Plot 1080 by 1920
 
@@ -177,7 +177,7 @@ fifa_tm_clean %>%
         legend.box.just = "right",
         legend.margin = margin(6, 6, 6, 6))
 
-ggsave("images/fifa_tm/all_teams_portrait.png", width = 9, height = 16, dpi = 72)
+# ggsave("images/fifa_tm/all_teams_portrait.png", width = 9, height = 16, dpi = 72)
 
 
 
@@ -395,7 +395,7 @@ fifa_tm_clean_eac_ecowas %>%
         legend.box.just = "right",
         legend.margin = margin(6, 6, 6, 6))
 
-ggsave("images/fifa_tm/west_east_square.png", width = 12, height = 12, dpi = 72)
+# ggsave("images/fifa_tm/west_east_square.png", width = 12, height = 12, dpi = 72)
 
 ################ Plot 1080 by 1920
 
@@ -430,4 +430,4 @@ fifa_tm_clean_eac_ecowas %>%
         legend.box.just = "right",
         legend.margin = margin(6, 6, 6, 6))
 
-ggsave("images/fifa_tm/west_east_portrait.png", width = 9, height = 16, dpi = 72)
+# ggsave("images/fifa_tm/west_east_portrait.png", width = 9, height = 16, dpi = 72)

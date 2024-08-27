@@ -29,21 +29,6 @@ library(patchwork)
 library(readxl)
 library(stringr)
 
-# (B) New method to export images and gifs
-
-# To export the images
-# camcorder::gg_record()
-
-# library(camcorder)
-# 
-# gg_record(
-#   dir = 'images/fifa_tm_top_player',
-#   width = 12,
-#   height = 12 *3/4 ,
-#   dpi = 300,
-#   bg = 'white'
-# )
-
 # Load the required data
 
 fifa_tm_top_player_value <- read_excel("datasets/FIFA_Ranking_Player_Value_Aug_2023.xlsx")
@@ -93,7 +78,7 @@ fifa_tm_top_player_value_clean_1 %>%
         legend.background = element_rect("azure2"),
         legend.position = c(0.15,0.15))
 
-ggsave("images/fifa_tm_top_player/rank_value_square.png", width = 12, height = 12, dpi = 72)
+# ggsave("images/fifa_tm_top_player/rank_value_square.png", width = 12, height = 12, dpi = 72)
 
 
 # 2) Player value of the most valuable player
@@ -136,4 +121,4 @@ fifa_tm_top_player_value_clean_split_name %>%
         legend.background = element_rect(color = "azure2", fill = "azure2"),
         legend.position = c(0.8, 0.2)) 
 
-ggsave("images/fifa_tm_top_player/market_value_square.png", width = 12, height = 12, dpi = 72)
+# ggsave("images/fifa_tm_top_player/market_value_square.png", width = 12, height = 12, dpi = 72)
