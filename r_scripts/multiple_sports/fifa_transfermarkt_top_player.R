@@ -58,7 +58,7 @@ fifa_tm_top_player_value_clean_1 %>%
        y = "Market Value (Euros)",
        title = "FIFA ranking correlates with a team's\nhighest player value",
        subtitle = "Comparing FIFA ranking with the market value of the top\nfootballers in East and West Africa",
-       caption = "Data Source: transfermarkt     |     By: @afro_dataviz",
+       caption = "Data Source: transfermarkt",
        color = "Regions") +
   theme_classic() +
   scale_y_log10(labels  = 
@@ -68,17 +68,20 @@ fifa_tm_top_player_value_clean_1 %>%
         axis.title.y =element_text(size = 28,  vjust = 1, face = "bold"),
         axis.text.x = element_text(size = 28, face = "bold", color = "black"),
         axis.text.y = element_text(size = 28, face = "bold", color = "black"),
-        plot.title = element_text(family="Helvetica", face="bold", size = 36, colour = "#000000", hjust = 0.5),
-        plot.subtitle = element_text(family="Helvetica", size = 24, hjust = 0.5),
-        plot.caption = element_text(family = "Helvetica",size = 24, vjust = 1, hjust = 0.5),
+        plot.title = element_text(family="Helvetica", face="bold", size = 36, colour = "#000000"),
+        plot.subtitle = element_text(family="Helvetica", size = 24),
+        plot.caption = element_text(family = "Helvetica",size = 24, vjust = 1),
         plot.background = element_rect(fill = "azure2", colour = "azure2"),
         panel.background = element_rect(fill = "azure2", colour = "azure2"),
+        plot.title.position = "plot",
+        plot.subtitle.position = "plot",
+        plot.caption.position = "plot",
         legend.title = element_blank(),
         legend.text = element_text(size = 28),
         legend.background = element_rect("azure2"),
         legend.position = c(0.15,0.15))
 
-# ggsave("images/fifa_tm_top_player/rank_value_square.png", width = 12, height = 12, dpi = 72)
+ggsave("images/fifa_tm_top_player/rank_value_square.png", width = 12, height = 12, dpi = 72)
 
 
 # 2) Player value of the most valuable player
@@ -92,33 +95,39 @@ fifa_tm_top_player_value_clean_split_name <- separate(fifa_tm_top_player_value_c
 fifa_tm_top_player_value_clean_split_name %>%
   ggplot(aes(reorder(surname, value_euros), value_euros, fill = region)) + 
   geom_bar(stat = "identity") + 
-  scale_y_continuous(limits = c(0, 150000000), breaks = seq(0, 150000000, 25000000), labels = comma) +
+  scale_y_continuous(limits = c(0, 150000000), 
+                     breaks = seq(0, 150000000, 25000000), 
+                     labels  = 
+                       label_number(scale = 1e-6, prefix = "$", suffix = "m", accuracy = 1)) +
   scale_fill_manual(values = c("goldenrod2", "darkgreen"), labels = c('East Africa', 'West Africa')) +
-  geom_text(aes(label = paste(surname, country, sep = "-"), hjust = 0), size = 7) +
+  geom_text(aes(label = paste(surname, " (", country, ")", sep = ""), hjust = 0), size = 7) +
   coord_flip() +
   theme_minimal() +
   labs(x = "",
        y = "Market Value (Euros)",
-       title = "The dominance of West Africa's\nmost valuable football players",
-       subtitle = "Market value of the most valuable football players in East and West Africa",
-       caption = "Data Source: transfermarkt     |     By: @afro_dataviz",
+       title = "The dominance of West Africa's most\nvaluable football players",
+       subtitle = "Market value (East and West Africa)",
+       caption = "Data Source: transfermarkt",
        fill = "Regions") +
   theme(axis.title.x =element_text(size = 28, vjust = 1, face = "bold"),
         axis.title.y =element_blank(),
-        axis.text.x = element_text(angle = 15, hjust = 0.75, vjust = 0.65, size = 24, face = "bold", color = "black"),
+        axis.text.x = element_text(hjust = 0.75, vjust = 0.65, size = 24, face = "bold", color = "black"),
         axis.text.y = element_blank(),
         axis.line.x = element_line(size = 1, colour = "black"),
         axis.ticks.x = element_line(size = 1, color="black") , 
         axis.ticks.length = unit(.25, "cm"),
-        plot.title = element_text(family="Helvetica", face="bold", size = 40, hjust = 0.5),
-        plot.subtitle = element_text(family="Helvetica", face="bold", size = 24, hjust = 0.5),
-        plot.caption = element_text(family = "Helvetica",size = 24, face = "bold", hjust = 0.5),
+        plot.title = element_text(family="Helvetica", face="bold", size = 40),
+        plot.subtitle = element_text(family="Helvetica", face="bold", size = 24),
+        plot.caption = element_text(family = "Helvetica",size = 24, face = "bold"),
         plot.background = element_rect(fill = "azure2", colour = "azure2"),
         panel.background = element_rect(fill = "azure2", colour = "azure2"),
         plot.margin = margin(0, 0, 0, 0, unit = "cm"),
+        plot.title.position = "plot",
+        plot.subtitle.position = "plot",
+        plot.caption.position = "plot",
         legend.title = element_blank(),
         legend.text = element_text(size = 28),
         legend.background = element_rect(color = "azure2", fill = "azure2"),
         legend.position = c(0.8, 0.2)) 
 
-# ggsave("images/fifa_tm_top_player/market_value_square.png", width = 12, height = 12, dpi = 72)
+ggsave("images/fifa_tm_top_player/market_value_square.png", width = 12, height = 12, dpi = 72)
