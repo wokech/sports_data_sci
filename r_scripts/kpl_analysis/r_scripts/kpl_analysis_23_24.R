@@ -29,6 +29,12 @@ kpl_merge_23_24 <- bind_cols(kpl_1_23_24, kpl_2_23_24)
 kpl_merge_23_24 <- kpl_merge_23_24 |>
   select(-Club)
 
+# Save data as csv in datasets
+write_csv()
+
+# Read in data
+read_csv()
+
 # 1) Plot of Points and Goal Differences in a Bar Chart
 
 kpl_merge_lollipop_23_24_pt_gd <- kpl_merge_23_24 |>
