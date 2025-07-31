@@ -1,4 +1,4 @@
-# KPL League Table Analysis (2024-2025)
+# Zambia PL League Table Analysis (2024-2025)
 
 # Load the required libraries
 library(rvest) # webscrape
@@ -11,17 +11,17 @@ library(fmsb)
 library(tidyverse)
 library(RColorBrewer)
 
-# # Load the required data
-# 
-# page_24_25 <- read_html("https://www.espn.com/soccer/standings/_/league/ken.1/season/2024")
+# Load the required data
+
+# page_24_25 <- read_html("https://www.espn.com/soccer/standings/_/league/zam.1/season/2024")
 # tables_24_25 <- html_table(page_24_25)
-# kpl_1_24_25 <- tables_24_25[[1]]
-# kpl_2_24_25 <- tables_24_25[[2]]
+# zam_pl_1_24_25 <- tables_24_25[[1]]
+# zam_pl_2_24_25 <- tables_24_25[[2]]
 # 
-# kpl_1_24_25 <- kpl_1_24_25 |>
-#   rename(Club = `2024-25 KPL`)
+# zam_pl_1_24_25 <- zam_pl_1_24_25 |>
+#   rename(Club = `2024-25 ZSL`)
 # 
-# kpl_1_24_25 <- kpl_1_24_25 |>
+# zam_pl_1_24_25 <- zam_pl_1_24_25 |>
 #   mutate(
 #     matches = str_match(Club, "^([0-9]+)([A-Z]{3})(.*)$"),
 #     code_number = matches[, 2],
@@ -30,40 +30,42 @@ library(RColorBrewer)
 #   ) |>
 #   select(-matches)
 # 
-# kpl_merge_24_25 <- bind_cols(kpl_1_24_25, kpl_2_24_25) 
+# zam_pl_merge_24_25 <- bind_cols(zam_pl_1_24_25, zam_pl_2_24_25)
 # 
-# kpl_merge_24_25 <- kpl_merge_24_25 |>
+# zam_pl_merge_24_25 <- zam_pl_merge_24_25 |>
 #   select(-Club)
 # 
 # # Save data as csv in datasets
-# write_csv(kpl_merge_24_25, here::here("sub_pro_1_kpl_analysis", 
-#                                      "datasets", "kpl_merge_24_25.csv"))
+# write_csv(zam_pl_merge_24_25, here::here("sub_pro_5_zam_pl_analysis",
+#                                          "datasets", "zam_pl_merge_24_25.csv"))
 
 # Read in data
-kpl_merge_24_25 <- read_csv(here::here("sub_pro_1_kpl_analysis", 
-                   "datasets", "kpl_merge_24_25.csv"))
+zam_pl_merge_24_25 <- read_csv(here::here("sub_pro_5_zam_pl_analysis", 
+                                          "datasets", "zam_pl_merge_24_25.csv"))
 
 # Display the structure of the data
-str(kpl_merge_24_25)
-head(kpl_merge_24_25)
+str(zam_pl_merge_24_25)
+head(zam_pl_merge_24_25)
 
 # 1) Plot of Points and Goal Differences in a Bar Chart
 
-kpl_merge_bar_24_25_pt_gd <- kpl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
+zam_pl_merge_bar_24_25_pt_gd <- zam_pl_merge_24_25 |>
+  mutate(team_name = if_else(team_name == "AKCCA",
+                             "KCCA", team_name)) |>
+  mutate(team_name = if_else(team_name == "FUPDF",
+                             "UPDF", team_name)) |>
+  mutate(team_name = if_else(team_name == "LMbale Heroes",
+                             "Mbale Heroes", team_name)) |>
   select(team_name, GD, P) 
 
-kpl_merge_bar_24_25_pt_gd_long <- kpl_merge_bar_24_25_pt_gd %>%
+zam_pl_merge_bar_24_25_pt_gd_long <- zam_pl_merge_bar_24_25_pt_gd %>%
   pivot_longer(cols = c(P, GD), names_to = "metric", values_to = "value") |>
-  mutate(team_name = fct_reorder(team_name, kpl_merge_bar_24_25_pt_gd$P[match(team_name, kpl_merge_bar_24_25_pt_gd$team_name)]))
+  mutate(team_name = fct_reorder(team_name, zam_pl_merge_bar_24_25_pt_gd$P[match(team_name, zam_pl_merge_bar_24_25_pt_gd$team_name)]))
 
 # Plot
-ggplot(kpl_merge_bar_24_25_pt_gd_long, aes(x = team_name, y = value, fill = metric)) +
+ggplot(zam_pl_merge_bar_24_25_pt_gd_long, aes(x = team_name, y = value, fill = metric)) +
   geom_col(position = "dodge") +
-  geom_text(data = kpl_merge_bar_24_25_pt_gd,
+  geom_text(data = zam_pl_merge_bar_24_25_pt_gd,
             aes(x = team_name, y = P, label = team_name),
             hjust = -0.05, vjust = -0.25, size = 7, 
             inherit.aes = FALSE) +
@@ -89,22 +91,24 @@ ggplot(kpl_merge_bar_24_25_pt_gd_long, aes(x = team_name, y = value, fill = metr
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_pt_gd.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_5_zam_pl_analysis/images/24_25/zam_pl_analysis_24_25_pt_gd.png", width = 12, height = 12, dpi = 300)
 
 # 2) Plot of Wins and Losses in a Lollipop Chart
 
-kpl_merge_lollipop_24_25_w_l <- kpl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
+zam_pl_merge_lollipop_24_25_w_l <- zam_pl_merge_24_25 |>
+  mutate(team_name = if_else(team_name == "AKCCA",
+                             "KCCA", team_name)) |>
+  mutate(team_name = if_else(team_name == "FUPDF",
+                             "UPDF", team_name)) |>
+  mutate(team_name = if_else(team_name == "LMbale Heroes",
+                             "Mbale Heroes", team_name)) |>
   mutate(W_PCT = round(W/GP, 3),
          L_PCT = round(L/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
   select(team_name, W_PCT, L_PCT, P) 
 
-ggplot(kpl_merge_lollipop_24_25_w_l) +
+ggplot(zam_pl_merge_lollipop_24_25_w_l) +
   geom_segment(aes(x = L_PCT, xend = W_PCT, y = team_name, yend = team_name), 
                color = "darkolivegreen3", linewidth = 4) +
   geom_point(aes(x = W_PCT, y = team_name), color = "darkgreen", size = 8) +
@@ -126,21 +130,23 @@ ggplot(kpl_merge_lollipop_24_25_w_l) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_w_l.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_5_zam_pl_analysis/images/24_25/zam_pl_analysis_24_25_w_l.png", width = 12, height = 12, dpi = 300)
 
 # 3) Plot of Points per Goal
 
-kpl_merge_bar_24_25_ppg <- kpl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
+zam_pl_merge_bar_24_25_ppg <- zam_pl_merge_24_25 |>
+  mutate(team_name = if_else(team_name == "AKCCA",
+                             "KCCA", team_name)) |>
+  mutate(team_name = if_else(team_name == "FUPDF",
+                             "UPDF", team_name)) |>
+  mutate(team_name = if_else(team_name == "LMbale Heroes",
+                             "Mbale Heroes", team_name)) |>
   mutate(PPG = round(P/F, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column       
   select(team_name, PPG) 
 
-ggplot(kpl_merge_bar_24_25_ppg) +
+ggplot(zam_pl_merge_bar_24_25_ppg) +
   geom_segment(aes(x = 0, xend = PPG, y = team_name, yend = team_name), 
                color = "salmon", linewidth = 4) +
   geom_point(aes(x = PPG, y = team_name), color = "brown4", size = 8) +
@@ -161,21 +167,23 @@ ggplot(kpl_merge_bar_24_25_ppg) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_ppg.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_5_zam_pl_analysis/images/24_25/zam_pl_analysis_24_25_ppg.png", width = 12, height = 12, dpi = 300)
 
 # 4) Plot of Goals per Game
 
-kpl_merge_bar_24_25_gpg <- kpl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
+zam_pl_merge_bar_24_25_gpg <- zam_pl_merge_24_25 |>
+  mutate(team_name = if_else(team_name == "AKCCA",
+                             "KCCA", team_name)) |>
+  mutate(team_name = if_else(team_name == "FUPDF",
+                             "UPDF", team_name)) |>
+  mutate(team_name = if_else(team_name == "LMbale Heroes",
+                             "Mbale Heroes", team_name)) |>
   mutate(GPG = round(F/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
   select(team_name, GPG) 
 
-ggplot(kpl_merge_bar_24_25_gpg) +
+ggplot(zam_pl_merge_bar_24_25_gpg) +
   geom_segment(aes(x = 0, xend = GPG, y = team_name, yend = team_name), 
                color = "yellow3", linewidth = 4) +
   geom_point(aes(x = GPG, y = team_name), color = "goldenrod3", size = 8) +
@@ -196,24 +204,24 @@ ggplot(kpl_merge_bar_24_25_gpg) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_gpg.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_5_zam_pl_analysis/images/24_25/zam_pl_analysis_24_25_gpg.png", width = 12, height = 12, dpi = 300)
 
 
 # 5) Plot of Goals Against per Game
 
-kpl_merge_bar_24_25_gapg <- kpl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
-  mutate(team_name = if_else(team_name == "SoNy Sugar",
-                             "Sony Sugar", team_name)) |>
+zam_pl_merge_bar_24_25_gapg <- zam_pl_merge_24_25 |>
+  mutate(team_name = if_else(team_name == "AKCCA",
+                             "KCCA", team_name)) |>
+  mutate(team_name = if_else(team_name == "FUPDF",
+                             "UPDF", team_name)) |>
+  mutate(team_name = if_else(team_name == "LMbale Heroes",
+                             "Mbale Heroes", team_name)) |>
   mutate(GAPG = round(A/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
   select(team_name, GAPG) 
 
-ggplot(kpl_merge_bar_24_25_gapg) +
+ggplot(zam_pl_merge_bar_24_25_gapg) +
   geom_segment(aes(x = 0, xend = GAPG, y = team_name, yend = team_name), 
                color = "grey", linewidth = 4) +
   geom_point(aes(x = GAPG, y = team_name), color = "black", size = 8) +
@@ -234,24 +242,24 @@ ggplot(kpl_merge_bar_24_25_gapg) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_ga_pg.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_5_zam_pl_analysis/images/24_25/zam_pl_analysis_24_25_ga_pg.png", width = 12, height = 12, dpi = 300)
 
 
 # 6) Plot of Goal Difference per Game
 
-kpl_merge_bar_24_25_gdpg <- kpl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
-  mutate(team_name = if_else(team_name == "SoNy Sugar",
-                             "Sony Sugar", team_name)) |>
+zam_pl_merge_bar_24_25_gdpg <- zam_pl_merge_24_25 |>
+  mutate(team_name = if_else(team_name == "AKCCA",
+                             "KCCA", team_name)) |>
+  mutate(team_name = if_else(team_name == "FUPDF",
+                             "UPDF", team_name)) |>
+  mutate(team_name = if_else(team_name == "LMbale Heroes",
+                             "Mbale Heroes", team_name)) |>
   mutate(GDPG = round(GD/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
   select(team_name, GDPG) 
 
-ggplot(kpl_merge_bar_24_25_gdpg) +
+ggplot(zam_pl_merge_bar_24_25_gdpg) +
   geom_segment(aes(x = 0, xend = GDPG, y = team_name, yend = team_name), 
                color = "lightgreen", linewidth = 4) +
   geom_point(aes(x = GDPG, y = team_name), color = "green4", size = 8) +
@@ -272,26 +280,26 @@ ggplot(kpl_merge_bar_24_25_gdpg) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_gd_pg.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_5_zam_pl_analysis/images/24_25/zam_pl_analysis_24_25_gd_pg.png", width = 12, height = 12, dpi = 300)
 
 # 7) Scatterplot of GF vs GA
 
-kpl_merge_bar_24_25_gf_ga <- kpl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
-  mutate(team_name = if_else(team_name == "SoNy Sugar",
-                             "Sony Sugar", team_name)) |>
+zam_pl_merge_bar_24_25_gf_ga <- zam_pl_merge_24_25 |>
+  mutate(team_name = if_else(team_name == "AKCCA",
+                             "KCCA", team_name)) |>
+  mutate(team_name = if_else(team_name == "FUPDF",
+                             "UPDF", team_name)) |>
+  mutate(team_name = if_else(team_name == "LMbale Heroes",
+                             "Mbale Heroes", team_name)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column       
   select(team_name, F, A)
 
 # Thresholds
-against_thresh <- median(kpl_merge_bar_24_25_gf_ga$A)
-for_thresh <- median(kpl_merge_bar_24_25_gf_ga$F)
+against_thresh <- median(zam_pl_merge_bar_24_25_gf_ga$A)
+for_thresh <- median(zam_pl_merge_bar_24_25_gf_ga$F)
 
-ggplot(kpl_merge_bar_24_25_gf_ga, aes(x = A, y = F)) +
+ggplot(zam_pl_merge_bar_24_25_gf_ga, aes(x = A, y = F)) +
   geom_point(color = "orange", size = 6) +
   geom_text_repel(aes(label = team_name), vjust = -0.5, size = 8) +
   labs(x = "Goals Against", y = "Goals For", title = "") +
@@ -316,28 +324,28 @@ ggplot(kpl_merge_bar_24_25_gf_ga, aes(x = A, y = F)) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_gf_ga.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_5_zam_pl_analysis/images/24_25/zam_pl_analysis_24_25_gf_ga.png", width = 12, height = 12, dpi = 300)
 
 
 # 8) Scatterplot of PPG vs GD
 
-kpl_merge_bar_24_25_ppg_gd <- kpl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
-  mutate(team_name = if_else(team_name == "SoNy Sugar",
-                             "Sony Sugar", team_name)) |>
+zam_pl_merge_bar_24_25_ppg_gd <- zam_pl_merge_24_25 |>
+  mutate(team_name = if_else(team_name == "AKCCA",
+                             "KCCA", team_name)) |>
+  mutate(team_name = if_else(team_name == "FUPDF",
+                             "UPDF", team_name)) |>
+  mutate(team_name = if_else(team_name == "LMbale Heroes",
+                             "Mbale Heroes", team_name)) |>
   mutate(PPG = round(P/F, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column       
   select(team_name, PPG, GD)
 
 # Thresholds
-goal_diff_thresh <- median(kpl_merge_bar_24_25_ppg_gd$GD)
-ppg_thresh <- median(kpl_merge_bar_24_25_ppg_gd$PPG)
+goal_diff_thresh <- median(zam_pl_merge_bar_24_25_ppg_gd$GD)
+ppg_thresh <- median(zam_pl_merge_bar_24_25_ppg_gd$PPG)
 
-ggplot(kpl_merge_bar_24_25_ppg_gd, aes(x = GD, y = PPG)) +
+ggplot(zam_pl_merge_bar_24_25_ppg_gd, aes(x = GD, y = PPG)) +
   geom_point(color = "brown4", size = 6) +
   geom_text_repel(aes(label = team_name), vjust = -0.5, size = 8) +
   labs(x = "Goal Difference", y = "Points Per Game", title = "") +
@@ -362,14 +370,14 @@ ggplot(kpl_merge_bar_24_25_ppg_gd, aes(x = GD, y = PPG)) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_ppg_gd.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_5_zam_pl_analysis/images/24_25/zam_pl_analysis_24_25_ppg_gd.png", width = 12, height = 12, dpi = 300)
 
 
 # 9) Radar Chart - Sample teams to plot
 
 # Create performance metrics for radar chart
 # We'll normalize some metrics to make them comparable on the same scale
-kpl_radar <- kpl_merge_24_25 %>%
+zam_pl_radar <- zam_pl_merge_24_25 %>%
   mutate(
     # Normalize wins, draws, losses to percentages
     Win_Pct = round((W / GP) * 100, 1),
@@ -391,14 +399,14 @@ kpl_radar <- kpl_merge_24_25 %>%
   )
 
 # Function to create radar chart for selected teams
-create_radar_chart <- function(team_indices, title = "KPL Teams Performance Radar") {
+create_radar_chart <- function(team_indices, title = "zam_pl Teams Performance Radar") {
   
   # Select metrics for radar chart
   metrics <- c("Win_Pct", "Attacking_Strength", "Defensive_Strength", 
                "Points_Per_Game", "Goals_Per_Game")
   
   # Create data frame for radar chart
-  radar_data <- kpl_radar[team_indices, metrics]
+  radar_data <- zam_pl_radar[team_indices, metrics]
   
   # Add max and min rows (required by fmsb package)
   max_vals <- c(100, 100, 100, 30, 4)  # Maximum possible values
@@ -428,7 +436,7 @@ create_radar_chart <- function(team_indices, title = "KPL Teams Performance Rada
   
   # Add legend
   legend(x = 0.8, y = 1.2, 
-         legend = kpl_radar$team_name[team_indices], 
+         legend = zam_pl_radar$team_name[team_indices], 
          bty = "n", pch = 20, col = colors, 
          text.col = "black", cex = 0.9, pt.cex = 2)
 }
@@ -436,37 +444,37 @@ create_radar_chart <- function(team_indices, title = "KPL Teams Performance Rada
 # Example 1: Compare top 4 teams
 cat("=== TOP 4 TEAMS COMPARISON ===\n")
 top_4 <- 1:4
-print(kpl_radar[top_4, c("team_name", "P", "Win_Pct", "Attacking_Strength", "Defensive_Strength")])
+print(zam_pl_radar[top_4, c("team_name", "P", "Win_Pct", "Attacking_Strength", "Defensive_Strength")])
 
 par(mfrow = c(1, 1), mar = c(1, 1, 3, 1))
-create_radar_chart(top_4, "KPL Top 4 Teams - Performance Radar")
+create_radar_chart(top_4, "zam_pl Top 4 Teams - Performance Radar")
 
 # Example 2: Compare teams with different playing styles
 cat("\n=== DIFFERENT PLAYING STYLES ===\n")
 # Police (Champions), Gor Mahia (High scoring), Kakamega Homeboyz (Balanced), Sofapaka (Mid-table)
 style_comparison <- c(1, 2, 3, 7)
-print(kpl_radar[style_comparison, c("team_name", "F", "A", "GD", "Win_Pct")])
+print(zam_pl_radar[style_comparison, c("team_name", "F", "A", "GD", "Win_Pct")])
 
 par(mfrow = c(1, 1), mar = c(1, 1, 3, 1))
-create_radar_chart(style_comparison, "KPL Teams - Different Playing Styles")
+create_radar_chart(style_comparison, "zam_pl Teams - Different Playing Styles")
 
 # Example 3: Bottom vs Top teams comparison
 cat("\n=== TOP vs BOTTOM TEAMS ===\n")
 top_bottom <- c(1, 2, 17, 18)  # Police, Gor Mahia vs Talanta, Nairobi City Stars
-print(kpl_radar[top_bottom, c("team_name", "P", "F", "A", "GD")])
+print(zam_pl_radar[top_bottom, c("team_name", "P", "F", "A", "GD")])
 
 par(mfrow = c(1, 1), mar = c(1, 1, 3, 1))
-create_radar_chart(top_bottom, "KPL - Top Teams vs Bottom Teams")
+create_radar_chart(top_bottom, "zam_pl - Top Teams vs Bottom Teams")
 
 # Display summary statistics
 cat("\n=== LEAGUE SUMMARY STATISTICS ===\n")
-cat("Champions:", kpl_merge_24_25$team_name[1], "with", kpl_merge_24_25$P[1], "points\n")
-cat("Highest scoring team:", kpl_merge_24_25$team_name[which.max(kpl_merge_24_25$F)], "with", max(kpl_merge_24_25$F), "goals\n")
-cat("Best defense:", kpl_merge_24_25$team_name[which.min(kpl_merge_24_25$A)], "with", min(kpl_merge_24_25$A), "goals conceded\n")
-cat("Best goal difference:", kpl_merge_24_25$team_name[which.max(kpl_merge_24_25$GD)], "with", max(kpl_merge_24_25$GD), "GD\n")
+cat("Champions:", zam_pl_merge_24_25$team_name[1], "with", zam_pl_merge_24_25$P[1], "points\n")
+cat("Highest scoring team:", zam_pl_merge_24_25$team_name[which.max(zam_pl_merge_24_25$F)], "with", max(zam_pl_merge_24_25$F), "goals\n")
+cat("Best defense:", zam_pl_merge_24_25$team_name[which.min(zam_pl_merge_24_25$A)], "with", min(zam_pl_merge_24_25$A), "goals conceded\n")
+cat("Best goal difference:", zam_pl_merge_24_25$team_name[which.max(zam_pl_merge_24_25$GD)], "with", max(zam_pl_merge_24_25$GD), "GD\n")
 
 # Create a comprehensive performance table
-performance_summary <- kpl_radar %>%
+performance_summary <- zam_pl_radar %>%
   select(team_name, P, Win_Pct, Goals_Per_Game, Conceded_Per_Game, 
          Attacking_Strength, Defensive_Strength) %>%
   arrange(desc(P))
