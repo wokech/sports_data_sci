@@ -10,6 +10,13 @@ library(ggrepel)
 library(fmsb)
 library(tidyverse)
 library(RColorBrewer)
+# devtools::install_github("ricardo-bion/ggradar", 
+#                          dependencies = TRUE)
+library(ggradar)
+library(dplyr)
+library(scales)
+library(ggplot2)
+library(tibble)
 
 # # Load the required data
 # 
@@ -56,7 +63,7 @@ kpl_merge_bar_24_25_pt_gd <- kpl_merge_24_25 |>
                              "Bandari", team_name)) |>
   select(team_name, GD, P) 
 
-kpl_merge_bar_24_25_pt_gd_long <- kpl_merge_bar_24_25_pt_gd %>%
+kpl_merge_bar_24_25_pt_gd_long <- kpl_merge_bar_24_25_pt_gd |>
   pivot_longer(cols = c(P, GD), names_to = "metric", values_to = "value") |>
   mutate(team_name = fct_reorder(team_name, kpl_merge_bar_24_25_pt_gd$P[match(team_name, kpl_merge_bar_24_25_pt_gd$team_name)]))
 
@@ -364,112 +371,138 @@ ggplot(kpl_merge_bar_24_25_ppg_gd, aes(x = GD, y = PPG)) +
 
 #ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_ppg_gd.png", width = 12, height = 12, dpi = 300)
 
+# 9) Radar Chart
 
-# 9) Radar Chart - Sample teams to plot
+# a) Non-Percentage metrics
 
-# Create performance metrics for radar chart
-# We'll normalize some metrics to make them comparable on the same scale
-kpl_radar <- kpl_merge_24_25 %>%
+kpl_merge_24_25_non_perc <- kpl_merge_24_25 |>
   mutate(
-    # Normalize wins, draws, losses to percentages
-    Win_Pct = round((W / GP) * 100, 1),
-    Draw_Pct = round((D / GP) * 100, 1),
-    Loss_Pct = round((L / GP) * 100, 1),
-    
-    # Goals per game
-    Goals_Per_Game = round(F / GP, 2),
-    Conceded_Per_Game = round(A / GP, 2),
-    
-    # Defensive strength (lower goals conceded = higher defensive score)
-    Defensive_Strength = round(100 - (A / max(A) * 100), 1),
-    
-    # Attacking strength
-    Attacking_Strength = round((F / max(F)) * 100, 1),
-    
-    # Overall efficiency (points per game)
-    Points_Per_Game = round(P / GP, 2) * 10  # Scale up for visibility
+    PPG = P / GP,
+    GPG = F / GP,
+    GAPG = A / GP,
+    GDPG = GD / GP,
+    GF2GA = F / A,
+    GD2P = GD / P
   )
 
-# Function to create radar chart for selected teams
-create_radar_chart <- function(team_indices, title = "KPL Teams Performance Radar") {
-  
-  # Select metrics for radar chart
-  metrics <- c("Win_Pct", "Attacking_Strength", "Defensive_Strength", 
-               "Points_Per_Game", "Goals_Per_Game")
-  
-  # Create data frame for radar chart
-  radar_data <- kpl_radar[team_indices, metrics]
-  
-  # Add max and min rows (required by fmsb package)
-  max_vals <- c(100, 100, 100, 30, 4)  # Maximum possible values
-  min_vals <- c(0, 0, 0, 0, 0)         # Minimum values
-  
-  radar_data <- rbind(max_vals, min_vals, radar_data)
-  colnames(radar_data) <- c("Win %", "Attack", "Defense", "Points/Game", "Goals/Game")
-  
-  # Set up colors
-  colors <- brewer.pal(length(team_indices), "Set3")
-  colors_fill <- paste0(colors, "40")  # Add transparency
-  
-  # Create the radar chart
-  radarchart(radar_data, # team index and metrics
-             axistype = 1, 
-             pcol = colors, # line color
-             pfcol = colors_fill, # fill color
-             plwd = 2, # line width
-             plty = 1, # line type
-             cglcol = "grey", # color of the net
-             cglty = 1, # net line type
-             axislabcol = "grey", # color of axis labels
-             caxislabels = seq(0, 100, 25), # vector of axis labels to display
-             cglwd = 0.8, # net width
-             vlcex = 0.8, # group labels size
-             title = title)
-  
-  # Add legend
-  legend(x = 0.8, y = 1.2, 
-         legend = kpl_radar$team_name[team_indices], 
-         bty = "n", pch = 20, col = colors, 
-         text.col = "black", cex = 0.9, pt.cex = 2)
-}
+# b) Percentage metrics
 
-# Example 1: Compare top 4 teams
-cat("=== TOP 4 TEAMS COMPARISON ===\n")
-top_4 <- 1:4
-print(kpl_radar[top_4, c("team_name", "P", "Win_Pct", "Attacking_Strength", "Defensive_Strength")])
+kpl_merge_24_25_perc <- kpl_merge_24_25 |>
+  mutate(
+    WinPerc = (W / GP) * 100,
+    DrawPerc = (D / GP) * 100,
+    LossPerc = (L / GP) * 100,
+    PointsPerc = (P / (GP * 3)) * 100,
+    GoalsSharePerc = (F / (F + A)) * 100,
+    GoalsAgainstPerc = (A / (F + A)) * 100
+  )
 
-par(mfrow = c(1, 1), mar = c(1, 1, 3, 1))
-create_radar_chart(top_4, "KPL Top 4 Teams - Performance Radar")
+# Table with selected metrics
 
-# Example 2: Compare teams with different playing styles
-cat("\n=== DIFFERENT PLAYING STYLES ===\n")
-# Police (Champions), Gor Mahia (High scoring), Kakamega Homeboyz (Balanced), Sofapaka (Mid-table)
-style_comparison <- c(1, 2, 3, 7)
-print(kpl_radar[style_comparison, c("team_name", "F", "A", "GD", "Win_Pct")])
+kpl_merge_24_25_non_perc_radar <- kpl_merge_24_25_non_perc |>
+  select(team_name, PPG, GPG, GAPG, GF2GA, GDPG, GD2P) 
 
-par(mfrow = c(1, 1), mar = c(1, 1, 3, 1))
-create_radar_chart(style_comparison, "KPL Teams - Different Playing Styles")
+kpl_merge_24_25_perc_radar <- kpl_merge_24_25_perc |>
+  select(team_name, WinPerc, DrawPerc, LossPerc, PointsPerc, GoalsSharePerc, GoalsAgainstPerc) 
 
-# Example 3: Bottom vs Top teams comparison
-cat("\n=== TOP vs BOTTOM TEAMS ===\n")
-top_bottom <- c(1, 2, 17, 18)  # Police, Gor Mahia vs Talanta, Nairobi City Stars
-print(kpl_radar[top_bottom, c("team_name", "P", "F", "A", "GD")])
+# Radar Plots
 
-par(mfrow = c(1, 1), mar = c(1, 1, 3, 1))
-create_radar_chart(top_bottom, "KPL - Top Teams vs Bottom Teams")
+# Top 3 Teams (Non-Percent Metrics)
 
-# Display summary statistics
-cat("\n=== LEAGUE SUMMARY STATISTICS ===\n")
-cat("Champions:", kpl_merge_24_25$team_name[1], "with", kpl_merge_24_25$P[1], "points\n")
-cat("Highest scoring team:", kpl_merge_24_25$team_name[which.max(kpl_merge_24_25$F)], "with", max(kpl_merge_24_25$F), "goals\n")
-cat("Best defense:", kpl_merge_24_25$team_name[which.min(kpl_merge_24_25$A)], "with", min(kpl_merge_24_25$A), "goals conceded\n")
-cat("Best goal difference:", kpl_merge_24_25$team_name[which.max(kpl_merge_24_25$GD)], "with", max(kpl_merge_24_25$GD), "GD\n")
+kpl_merge_24_25_non_perc_radar_top_3 <- kpl_merge_24_25_non_perc_radar |>
+  filter(team_name == c("Police", "Gor Mahia", "Kakamega Homeboyz"))
 
-# Create a comprehensive performance table
-performance_summary <- kpl_radar %>%
-  select(team_name, P, Win_Pct, Goals_Per_Game, Conceded_Per_Game, 
-         Attacking_Strength, Defensive_Strength) %>%
-  arrange(desc(P))
+my_colors <- c("Police" = "#BE8125", 
+               "Gor Mahia" = "#2FBE25", 
+               "Kakamega Homeboyz" = "#BE25AB")
 
-cat("\n=== PERFORMANCE METRICS TABLE ===\n")
-print(performance_summary, row.names = FALSE)
+non_perc_radar_top_3 <- ggradar(kpl_merge_24_25_non_perc_radar_top_3,
+        grid.min = 0,
+        grid.mid = 1.25,
+        grid.max = 2.5,
+        values.radar = c("", "", ""),
+        axis.labels = c("Points per Game", "Goals per\nGame", "Goals Against\nper Game", 
+                        "Attack-to-Defense Ratio\n(Goal For/Goals Against)", "Goal Difference\nper Game", 
+                        "Goal Difference\nto Points"),
+        axis.label.size = 8,
+        group.line.width = 1.2,
+        group.point.size = 3,
+        group.colours = my_colors,
+        legend.position = "bottom",
+        legend.text.size = 24,
+        plot.title = "") +
+  theme(
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+    text = element_text(size = 32),
+    panel.background = element_rect(fill = "azure2", color = "azure2"),
+    plot.background  = element_rect(fill = "azure2",  color = "azure2"),
+    legend.background = element_rect(
+      fill = "azure2",       # or any fill color
+      colour = "black",     # border color
+      linewidth = 0.8,      # border thickness
+      linetype = "solid"
+    ),
+    legend.box.background = element_rect(
+      colour = "black",     # outer box (optional)
+      linewidth = 1
+    )
+  )
+
+non_perc_radar_top_3 <- non_perc_radar_top_3 +
+  annotate("text", x = 0, y = 0, label = "0", size = 7.5) +
+  annotate("text", x = 0, y = 1.25, label = "1.25", size = 7.5) +
+  annotate("text", x = 0, y = 2.5, label = "2.5", size = 7.5)
+
+non_perc_radar_top_3
+
+# Top 3 Teams (Percent Metrics)
+
+kpl_merge_24_25_perc_radar_top_3 <- kpl_merge_24_25_perc_radar |>
+  filter(team_name == c("Police", "Gor Mahia", "Kakamega Homeboyz"))
+
+my_colors <- c("Police" = "#BE8125", 
+               "Gor Mahia" = "#2FBE25", 
+               "Kakamega Homeboyz" = "#BE25AB")
+
+perc_radar_top_3 <- ggradar(kpl_merge_24_25_perc_radar_top_3,
+                                grid.min = 0,
+                                grid.mid = 50,
+                                grid.max = 100,
+                                values.radar = c("", "", ""),
+                                axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
+                                                "Points Earned/Total\nPossible Points (%)", 
+                                                "Goals For/\nTotal Goals (%)", 
+                                                "Goals Against/\nTotal Goals (%)"),
+                                axis.label.size = 8,
+                                group.line.width = 1.2,
+                                group.point.size = 3,
+                                group.colours = my_colors,
+                                legend.position = "bottom",
+                                legend.text.size = 24,
+                                plot.title = "") +
+  theme(
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+    text = element_text(size = 32),
+    panel.background = element_rect(fill = "azure2", color = "azure2"),
+    plot.background  = element_rect(fill = "azure2",  color = "azure2"),
+    legend.background = element_rect(
+      fill = "azure2",       # or any fill color
+      colour = "black",     # border color
+      linewidth = 0.8,      # border thickness
+      linetype = "solid"
+    ),
+    legend.box.background = element_rect(
+      colour = "black",     # outer box (optional)
+      linewidth = 1
+    )
+  )
+
+perc_radar_top_3 <- perc_radar_top_3 +
+  annotate("text", x = 0, y = 0, label = "0", size = 7.5) +
+  annotate("text", x = 0, y = 50, label = "50", size = 7.5) +
+  annotate("text", x = 0, y = 100, label = "100", size = 7.5)
+
+perc_radar_top_3
+
+
+ggsave("test.png", height = 12, width = 12, dpi = 300)
