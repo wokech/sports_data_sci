@@ -39,9 +39,18 @@ library(RColorBrewer)
 # write_csv(uganda_pl_merge_24_25, here::here("sub_pro_3_uganda_pl_analysis",
 #                                      "datasets", "uganda_pl_merge_24_25.csv"))
 
+
 # Read in data
 uganda_pl_merge_24_25 <- read_csv(here::here("sub_pro_3_uganda_pl_analysis", 
-                                            "datasets", "uganda_pl_merge_24_25.csv"))
+                                             "datasets", "uganda_pl_merge_24_25.csv"))
+
+uganda_pl_merge_24_25 <- uganda_pl_merge_24_25 |>
+  mutate(team_name = if_else(team_name == "AKCCA",
+                             "KCCA", team_name)) |>
+  mutate(team_name = if_else(team_name == "FUPDF",
+                             "UPDF", team_name)) |>
+  mutate(team_name = if_else(team_name == "LMbale Heroes",
+                             "Mbale Heroes", team_name))
 
 # Display the structure of the data
 str(uganda_pl_merge_24_25)
@@ -50,21 +59,19 @@ head(uganda_pl_merge_24_25)
 # 1) Plot of Points and Goal Differences in a Bar Chart
 
 uganda_pl_merge_bar_24_25_pt_gd <- uganda_pl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "AKCCA",
-                             "KCCA", team_name)) |>
-  mutate(team_name = if_else(team_name == "FUPDF",
-                             "UPDF", team_name)) |>
-  mutate(team_name = if_else(team_name == "LMbale Heroes",
-                             "Mbale Heroes", team_name)) |>
-  select(team_name, GD, P) 
+  select(team_name, GD, P)
 
-uganda_pl_merge_bar_24_25_pt_gd_long <- uganda_pl_merge_bar_24_25_pt_gd %>%
-  pivot_longer(cols = c(P, GD), names_to = "metric", values_to = "value") |>
-  mutate(team_name = fct_reorder(team_name, uganda_pl_merge_bar_24_25_pt_gd$P[match(team_name, uganda_pl_merge_bar_24_25_pt_gd$team_name)]))
+team_order <- uganda_pl_merge_bar_24_25_pt_gd %>%
+  arrange(desc(P), desc(GD)) %>%
+  pull(team_name)
 
-# Plot
-ggplot(uganda_pl_merge_bar_24_25_pt_gd_long, aes(x = team_name, y = value, fill = metric)) +
-  geom_col(position = "dodge") +
+uganda_pl_merge_bar_24_25_pt_gd_long <- uganda_pl_merge_bar_24_25_pt_gd |>
+  pivot_longer(cols = c(P, GD), names_to = "metric", values_to = "value")
+
+uganda_pl_merge_bar_24_25_pt_gd_long %>%
+  mutate(team_name = factor(team_name, levels = rev(team_order))) %>%
+  ggplot(aes(x = team_name, y = value, fill = metric)) +
+  geom_col(position = position_dodge()) +
   geom_text(data = uganda_pl_merge_bar_24_25_pt_gd,
             aes(x = team_name, y = P, label = team_name),
             hjust = -0.05, vjust = -0.25, size = 7, 
@@ -96,12 +103,6 @@ ggsave("sub_pro_3_uganda_pl_analysis/images/24_25/uganda_pl_analysis_24_25_pt_gd
 # 2) Plot of Wins and Losses in a Lollipop Chart
 
 uganda_pl_merge_lollipop_24_25_w_l <- uganda_pl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "AKCCA",
-                             "KCCA", team_name)) |>
-  mutate(team_name = if_else(team_name == "FUPDF",
-                             "UPDF", team_name)) |>
-  mutate(team_name = if_else(team_name == "LMbale Heroes",
-                             "Mbale Heroes", team_name)) |>
   mutate(W_PCT = round(W/GP, 3),
          L_PCT = round(L/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
@@ -135,12 +136,6 @@ ggsave("sub_pro_3_uganda_pl_analysis/images/24_25/uganda_pl_analysis_24_25_w_l.p
 # 3) Plot of Points per Goal
 
 uganda_pl_merge_bar_24_25_ppg <- uganda_pl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "AKCCA",
-                             "KCCA", team_name)) |>
-  mutate(team_name = if_else(team_name == "FUPDF",
-                             "UPDF", team_name)) |>
-  mutate(team_name = if_else(team_name == "LMbale Heroes",
-                             "Mbale Heroes", team_name)) |>
   mutate(PPG = round(P/F, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column       
@@ -172,12 +167,6 @@ ggsave("sub_pro_3_uganda_pl_analysis/images/24_25/uganda_pl_analysis_24_25_ppg.p
 # 4) Plot of Goals per Game
 
 uganda_pl_merge_bar_24_25_gpg <- uganda_pl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "AKCCA",
-                             "KCCA", team_name)) |>
-  mutate(team_name = if_else(team_name == "FUPDF",
-                             "UPDF", team_name)) |>
-  mutate(team_name = if_else(team_name == "LMbale Heroes",
-                             "Mbale Heroes", team_name)) |>
   mutate(GPG = round(F/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
@@ -210,12 +199,6 @@ ggsave("sub_pro_3_uganda_pl_analysis/images/24_25/uganda_pl_analysis_24_25_gpg.p
 # 5) Plot of Goals Against per Game
 
 uganda_pl_merge_bar_24_25_gapg <- uganda_pl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "AKCCA",
-                             "KCCA", team_name)) |>
-  mutate(team_name = if_else(team_name == "FUPDF",
-                             "UPDF", team_name)) |>
-  mutate(team_name = if_else(team_name == "LMbale Heroes",
-                             "Mbale Heroes", team_name)) |>
   mutate(GAPG = round(A/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
@@ -248,12 +231,6 @@ ggsave("sub_pro_3_uganda_pl_analysis/images/24_25/uganda_pl_analysis_24_25_ga_pg
 # 6) Plot of Goal Difference per Game
 
 uganda_pl_merge_bar_24_25_gdpg <- uganda_pl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "AKCCA",
-                             "KCCA", team_name)) |>
-  mutate(team_name = if_else(team_name == "FUPDF",
-                             "UPDF", team_name)) |>
-  mutate(team_name = if_else(team_name == "LMbale Heroes",
-                             "Mbale Heroes", team_name)) |>
   mutate(GDPG = round(GD/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
@@ -285,12 +262,6 @@ ggsave("sub_pro_3_uganda_pl_analysis/images/24_25/uganda_pl_analysis_24_25_gd_pg
 # 7) Scatterplot of GF vs GA
 
 uganda_pl_merge_bar_24_25_gf_ga <- uganda_pl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "AKCCA",
-                             "KCCA", team_name)) |>
-  mutate(team_name = if_else(team_name == "FUPDF",
-                             "UPDF", team_name)) |>
-  mutate(team_name = if_else(team_name == "LMbale Heroes",
-                             "Mbale Heroes", team_name)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column       
   select(team_name, F, A)
@@ -330,12 +301,6 @@ ggsave("sub_pro_3_uganda_pl_analysis/images/24_25/uganda_pl_analysis_24_25_gf_ga
 # 8) Scatterplot of PPG vs GD
 
 uganda_pl_merge_bar_24_25_ppg_gd <- uganda_pl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "AKCCA",
-                             "KCCA", team_name)) |>
-  mutate(team_name = if_else(team_name == "FUPDF",
-                             "UPDF", team_name)) |>
-  mutate(team_name = if_else(team_name == "LMbale Heroes",
-                             "Mbale Heroes", team_name)) |>
   mutate(PPG = round(P/F, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column       
@@ -375,109 +340,200 @@ ggsave("sub_pro_3_uganda_pl_analysis/images/24_25/uganda_pl_analysis_24_25_ppg_g
 
 # 9) Radar Chart - Sample teams to plot
 
-# Create performance metrics for radar chart
-# We'll normalize some metrics to make them comparable on the same scale
-uganda_pl_radar <- uganda_pl_merge_24_25 %>%
+# a) Non-Percentage metrics
+
+uganda_pl_merge_24_25_non_perc <- uganda_pl_merge_24_25 |>
   mutate(
-    # Normalize wins, draws, losses to percentages
-    Win_Pct = round((W / GP) * 100, 1),
-    Draw_Pct = round((D / GP) * 100, 1),
-    Loss_Pct = round((L / GP) * 100, 1),
-    
-    # Goals per game
-    Goals_Per_Game = round(F / GP, 2),
-    Conceded_Per_Game = round(A / GP, 2),
-    
-    # Defensive strength (lower goals conceded = higher defensive score)
-    Defensive_Strength = round(100 - (A / max(A) * 100), 1),
-    
-    # Attacking strength
-    Attacking_Strength = round((F / max(F)) * 100, 1),
-    
-    # Overall efficiency (points per game)
-    Points_Per_Game = round(P / GP, 2) * 10  # Scale up for visibility
+    PPG = P / GP,
+    GPG = F / GP,
+    GAPG = A / GP,
+    GDPG = GD / GP,
+    GF2GA = F / A,
+    GD2P = GD / P
   )
 
-# Function to create radar chart for selected teams
-create_radar_chart <- function(team_indices, title = "uganda_pl Teams Performance Radar") {
-  
-  # Select metrics for radar chart
-  metrics <- c("Win_Pct", "Attacking_Strength", "Defensive_Strength", 
-               "Points_Per_Game", "Goals_Per_Game")
-  
-  # Create data frame for radar chart
-  radar_data <- uganda_pl_radar[team_indices, metrics]
-  
-  # Add max and min rows (required by fmsb package)
-  max_vals <- c(100, 100, 100, 30, 4)  # Maximum possible values
-  min_vals <- c(0, 0, 0, 0, 0)         # Minimum values
-  
-  radar_data <- rbind(max_vals, min_vals, radar_data)
-  colnames(radar_data) <- c("Win %", "Attack", "Defense", "Points/Game", "Goals/Game")
-  
-  # Set up colors
-  colors <- brewer.pal(length(team_indices), "Set3")
-  colors_fill <- paste0(colors, "40")  # Add transparency
-  
-  # Create the radar chart
-  radarchart(radar_data, # team index and metrics
-             axistype = 1, 
-             pcol = colors, # line color
-             pfcol = colors_fill, # fill color
-             plwd = 2, # line width
-             plty = 1, # line type
-             cglcol = "grey", # color of the net
-             cglty = 1, # net line type
-             axislabcol = "grey", # color of axis labels
-             caxislabels = seq(0, 100, 25), # vector of axis labels to display
-             cglwd = 0.8, # net width
-             vlcex = 0.8, # group labels size
-             title = title)
-  
-  # Add legend
-  legend(x = 0.8, y = 1.2, 
-         legend = uganda_pl_radar$team_name[team_indices], 
-         bty = "n", pch = 20, col = colors, 
-         text.col = "black", cex = 0.9, pt.cex = 2)
-}
+# b) Percentage metrics
 
-# Example 1: Compare top 4 teams
-cat("=== TOP 4 TEAMS COMPARISON ===\n")
-top_4 <- 1:4
-print(uganda_pl_radar[top_4, c("team_name", "P", "Win_Pct", "Attacking_Strength", "Defensive_Strength")])
+uganda_pl_merge_24_25_perc <- uganda_pl_merge_24_25 |>
+  mutate(
+    WinPerc = (W / GP) * 100,
+    DrawPerc = (D / GP) * 100,
+    LossPerc = (L / GP) * 100,
+    PointsPerc = (P / (GP * 3)) * 100,
+    GoalsSharePerc = (F / (F + A)) * 100,
+    GoalsAgainstPerc = (A / (F + A)) * 100
+  )
 
-par(mfrow = c(1, 1), mar = c(1, 1, 3, 1))
-create_radar_chart(top_4, "uganda_pl Top 4 Teams - Performance Radar")
+# c) Table with selected metrics
 
-# Example 2: Compare teams with different playing styles
-cat("\n=== DIFFERENT PLAYING STYLES ===\n")
-# Police (Champions), Gor Mahia (High scoring), Kakamega Homeboyz (Balanced), Sofapaka (Mid-table)
-style_comparison <- c(1, 2, 3, 7)
-print(uganda_pl_radar[style_comparison, c("team_name", "F", "A", "GD", "Win_Pct")])
+uganda_pl_merge_24_25_non_perc_radar <- uganda_pl_merge_24_25_non_perc |>
+  select(team_name, PPG, GPG, GAPG, GF2GA, GDPG, GD2P) 
 
-par(mfrow = c(1, 1), mar = c(1, 1, 3, 1))
-create_radar_chart(style_comparison, "uganda_pl Teams - Different Playing Styles")
+uganda_pl_merge_24_25_perc_radar <- uganda_pl_merge_24_25_perc |>
+  select(team_name, WinPerc, DrawPerc, LossPerc, PointsPerc, GoalsSharePerc, GoalsAgainstPerc) 
 
-# Example 3: Bottom vs Top teams comparison
-cat("\n=== TOP vs BOTTOM TEAMS ===\n")
-top_bottom <- c(1, 2, 17, 18)  # Police, Gor Mahia vs Talanta, Nairobi City Stars
-print(uganda_pl_radar[top_bottom, c("team_name", "P", "F", "A", "GD")])
+# d) Radar Plots
 
-par(mfrow = c(1, 1), mar = c(1, 1, 3, 1))
-create_radar_chart(top_bottom, "uganda_pl - Top Teams vs Bottom Teams")
 
-# Display summary statistics
-cat("\n=== LEAGUE SUMMARY STATISTICS ===\n")
-cat("Champions:", uganda_pl_merge_24_25$team_name[1], "with", uganda_pl_merge_24_25$P[1], "points\n")
-cat("Highest scoring team:", uganda_pl_merge_24_25$team_name[which.max(uganda_pl_merge_24_25$F)], "with", max(uganda_pl_merge_24_25$F), "goals\n")
-cat("Best defense:", uganda_pl_merge_24_25$team_name[which.min(uganda_pl_merge_24_25$A)], "with", min(uganda_pl_merge_24_25$A), "goals conceded\n")
-cat("Best goal difference:", uganda_pl_merge_24_25$team_name[which.max(uganda_pl_merge_24_25$GD)], "with", max(uganda_pl_merge_24_25$GD), "GD\n")
+# Top 3 Teams (Percent Metrics)
 
-# Create a comprehensive performance table
-performance_summary <- uganda_pl_radar %>%
-  select(team_name, P, Win_Pct, Goals_Per_Game, Conceded_Per_Game, 
-         Attacking_Strength, Defensive_Strength) %>%
-  arrange(desc(P))
+uganda_pl_merge_24_25_perc_radar_top_3 <- uganda_pl_merge_24_25_perc_radar |>
+  filter(team_name == c("Vipers", "NEC FC", "Bul FC"))
 
-cat("\n=== PERFORMANCE METRICS TABLE ===\n")
-print(performance_summary, row.names = FALSE)
+my_top_colors <- c("Vipers" = "#BE8125", 
+                   "NEC FC" = "#2FBE25", 
+                   "Bul FC" = "#BE25AB")
+
+perc_radar_top_3 <- ggradar(uganda_pl_merge_24_25_perc_radar_top_3,
+                            grid.min = 0,
+                            grid.mid = 50,
+                            grid.max = 100,
+                            values.radar = c("", "", ""),
+                            axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
+                                            "Points Earned/Total\nPossible Points (%)", 
+                                            "Goals For/\nTotal Goals (%)", 
+                                            "Goals Against/\nTotal Goals (%)"),
+                            axis.label.size = 8,
+                            fill = TRUE, 
+                            fill.alpha = 0.2,
+                            group.line.width = 1.2,
+                            group.point.size = 3,
+                            group.colours = my_top_colors,
+                            legend.position = "bottom",
+                            legend.text.size = 24,
+                            plot.title = "") +
+  theme(
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+    text = element_text(size = 32),
+    panel.background = element_rect(fill = "azure2", color = "azure2"),
+    plot.background  = element_rect(fill = "azure2",  color = "azure2"),
+    legend.background = element_rect(
+      fill = "azure2",       # or any fill color
+      colour = "black",     # border color
+      linewidth = 0.8,      # border thickness
+      linetype = "solid"
+    ),
+    legend.box.background = element_rect(
+      colour = "black",     # outer box (optional)
+      linewidth = 1
+    )
+  )
+
+perc_radar_top_3 <- perc_radar_top_3 +
+  annotate("text", x = 0, y = 0, label = "0", size = 7.5) +
+  annotate("text", x = 0, y = 50, label = "50", size = 7.5) +
+  annotate("text", x = 0, y = 100, label = "100", size = 7.5)
+
+perc_radar_top_3
+
+ggsave("sub_pro_3_uganda_pl_analysis/images/24_25/uganda_pl_analysis_24_25_perc_radar_top_3.png", height = 12, width = 12, dpi = 300)
+
+
+# Bottom 3 Teams (Percent Metrics)
+
+uganda_pl_merge_24_25_perc_radar_bottom_3 <- uganda_pl_merge_24_25_perc_radar |>
+  filter(team_name %in% c("Bright Stars", "Wakiso Giants", "Mbale Heroes"))
+
+my_bottom_colors <- c("Bright Stars" = "#BE8125", 
+                      "Wakiso Giants" = "#2FBE25", 
+                      "Mbale Heroes" = "#BE25AB")
+
+perc_radar_bottom_3 <- ggradar(uganda_pl_merge_24_25_perc_radar_bottom_3,
+                               grid.min = 0,
+                               grid.mid = 50,
+                               grid.max = 100,
+                               values.radar = c("", "", ""),
+                               axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
+                                               "Points Earned/Total\nPossible Points (%)", 
+                                               "Goals For/\nTotal Goals (%)", 
+                                               "Goals Against/\nTotal Goals (%)"),
+                               axis.label.size = 8,
+                               fill = TRUE, 
+                               fill.alpha = 0.2,
+                               group.line.width = 1.2,
+                               group.point.size = 3,
+                               group.colours = my_bottom_colors,
+                               legend.position = "bottom",
+                               legend.text.size = 24,
+                               plot.title = "") +
+  theme(
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+    text = element_text(size = 32),
+    panel.background = element_rect(fill = "azure2", color = "azure2"),
+    plot.background  = element_rect(fill = "azure2",  color = "azure2"),
+    legend.background = element_rect(
+      fill = "azure2",       # or any fill color
+      colour = "black",     # border color
+      linewidth = 0.8,      # border thickness
+      linetype = "solid"
+    ),
+    legend.box.background = element_rect(
+      colour = "black",     # outer box (optional)
+      linewidth = 1
+    )
+  )
+
+perc_radar_bottom_3 <- perc_radar_bottom_3 +
+  annotate("text", x = 0, y = 0, label = "0", size = 7.5) +
+  annotate("text", x = 0, y = 50, label = "50", size = 7.5) +
+  annotate("text", x = 0, y = 100, label = "100", size = 7.5)
+
+perc_radar_bottom_3
+
+ggsave("sub_pro_3_uganda_pl_analysis/images/24_25/uganda_pl_analysis_24_25_perc_radar_bottom_3.png", height = 12, width = 12, dpi = 300)
+
+
+# Bottom 3 Teams (Percent Metrics)
+
+uganda_pl_merge_24_25_perc_radar_top_bottom_2 <- uganda_pl_merge_24_25_perc_radar |>
+  filter(team_name %in% c("Vipers", "NEC FC", "Wakiso Giants", "Mbale Heroes"))
+
+my_top_bottom_colors <- c("Vipers" = "#000080", 
+                          "NEC FC" = "#2FBE25", 
+                          "Wakiso Giants" = "#BE8125", 
+                          "Mbale Heroes" = "#BE25AB")
+
+perc_radar_top_bottom_2 <- ggradar(uganda_pl_merge_24_25_perc_radar_top_bottom_2,
+                                   grid.min = 0,
+                                   grid.mid = 50,
+                                   grid.max = 100,
+                                   values.radar = c("", "", ""),
+                                   axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
+                                                   "Points Earned/Total\nPossible Points (%)", 
+                                                   "Goals For/\nTotal Goals (%)", 
+                                                   "Goals Against/\nTotal Goals (%)"),
+                                   axis.label.size = 8,
+                                   fill = TRUE, 
+                                   fill.alpha = 0.2,
+                                   group.line.width = 1.2,
+                                   group.point.size = 3,
+                                   group.colours = my_top_bottom_colors,
+                                   legend.position = "bottom",
+                                   legend.text.size = 24,
+                                   plot.title = "") +
+  theme(
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+    text = element_text(size = 32),
+    panel.background = element_rect(fill = "azure2", color = "azure2"),
+    plot.background  = element_rect(fill = "azure2",  color = "azure2"),
+    legend.background = element_rect(
+      fill = "azure2",       # or any fill color
+      colour = "black",     # border color
+      linewidth = 0.8,      # border thickness
+      linetype = "solid"
+    ),
+    legend.box.background = element_rect(
+      colour = "black",     # outer box (optional)
+      linewidth = 1
+    )
+  ) +
+  guides(color = guide_legend(nrow = 2, byrow = TRUE))
+
+perc_radar_top_bottom_2 <- perc_radar_top_bottom_2 +
+  annotate("text", x = 0, y = 0, label = "0", size = 7.5) +
+  annotate("text", x = 0, y = 50, label = "50", size = 7.5) +
+  annotate("text", x = 0, y = 100, label = "100", size = 7.5)
+
+perc_radar_top_bottom_2
+
+ggsave("sub_pro_3_uganda_pl_analysis/images/24_25/uganda_pl_analysis_24_25_perc_radar_top_bottom_2.png", height = 12, width = 12, dpi = 300)

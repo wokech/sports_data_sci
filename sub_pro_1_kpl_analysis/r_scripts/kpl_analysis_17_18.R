@@ -6,6 +6,17 @@ library(tidyverse)
 library(ggtext)
 library(readr)
 library(ggrepel)
+#install.packages("fmsb")  # for radar charts
+library(fmsb)
+library(tidyverse)
+library(RColorBrewer)
+# devtools::install_github("ricardo-bion/ggradar", 
+#                          dependencies = TRUE)
+library(ggradar)
+library(dplyr)
+library(scales)
+library(ggplot2)
+library(tibble)
 
 # # Load the required data
 # 
@@ -39,24 +50,37 @@ library(ggrepel)
 kpl_merge_17_18 <- read_csv(here::here("sub_pro_1_kpl_analysis", 
                                        "datasets", "kpl_merge_17_18.csv"))
 
-# 1) Plot of Points and Goal Differences in a Bar Chart
-
-kpl_merge_bar_17_18_pt_gd <- kpl_merge_17_18 |>
+kpl_merge_17_18 <- kpl_merge_17_18 |>
   mutate(team_name = if_else(team_name == "CPosta Rangers",
                              "Posta Rangers", team_name)) |>
   mutate(team_name = if_else(team_name == "Bandari Mtwara",
                              "Bandari", team_name)) |>
   mutate(team_name = if_else(team_name == "SoNy Sugar",
-                             "Sony Sugar", team_name)) |>
-  select(team_name, GD, P) 
+                             "Sony Sugar", team_name))
 
-kpl_merge_bar_17_18_pt_gd_long <- kpl_merge_bar_17_18_pt_gd %>%
-  pivot_longer(cols = c(P, GD), names_to = "metric", values_to = "value") |>
-  mutate(team_name = fct_reorder(team_name, kpl_merge_bar_17_18_pt_gd$P[match(team_name, kpl_merge_bar_17_18_pt_gd$team_name)]))
+# Display the structure of the data
+str(kpl_merge_17_18)
+head(kpl_merge_17_18)
+
+
+# 1) Plot of Points and Goal Differences in a Bar Chart
+
+kpl_merge_bar_17_18_pt_gd <- kpl_merge_17_18 |>
+  select(team_name, GD, P)
+
+team_order <- kpl_merge_bar_17_18_pt_gd %>%
+  arrange(desc(P), desc(GD)) %>%
+  pull(team_name)
+
+kpl_merge_bar_17_18_pt_gd_long <- kpl_merge_bar_17_18_pt_gd |>
+  pivot_longer(cols = c(P, GD), names_to = "metric", values_to = "value")
 
 # Plot
-ggplot(kpl_merge_bar_17_18_pt_gd_long, aes(x = team_name, y = value, fill = metric)) +
-  geom_col(position = "dodge") +
+
+kpl_merge_bar_17_18_pt_gd_long %>%
+  mutate(team_name = factor(team_name, levels = rev(team_order))) %>%
+  ggplot(aes(x = team_name, y = value, fill = metric)) +
+  geom_col(position = position_dodge()) +
   geom_text(data = kpl_merge_bar_17_18_pt_gd,
             aes(x = team_name, y = P, label = team_name),
             hjust = -0.05, vjust = -0.25, size = 7, 
@@ -88,12 +112,6 @@ ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_pt_gd.png", width
 # 2) Plot of Wins and Losses in a Lollipop Chart
 
 kpl_merge_lollipop_17_18_w_l <- kpl_merge_17_18 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
-  mutate(team_name = if_else(team_name == "SoNy Sugar",
-                             "Sony Sugar", team_name)) |>
   mutate(W_PCT = round(W/GP, 3),
          L_PCT = round(L/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
@@ -127,12 +145,6 @@ ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_w_l.png", width =
 # 3) Plot of Points per Goal
 
 kpl_merge_bar_17_18_ppg <- kpl_merge_17_18 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
-  mutate(team_name = if_else(team_name == "SoNy Sugar",
-                             "Sony Sugar", team_name)) |>
   mutate(PPG = round(P/F, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column       
@@ -164,12 +176,6 @@ ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_ppg.png", width =
 # 4) Plot of Goals per Game
 
 kpl_merge_bar_17_18_gpg <- kpl_merge_17_18 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
-  mutate(team_name = if_else(team_name == "SoNy Sugar",
-                             "Sony Sugar", team_name)) |>
   mutate(GPG = round(F/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
@@ -202,12 +208,6 @@ ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_gpg.png", width =
 # 5) Plot of Goals Against per Game
 
 kpl_merge_bar_17_18_gapg <- kpl_merge_17_18 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
-  mutate(team_name = if_else(team_name == "SoNy Sugar",
-                             "Sony Sugar", team_name)) |>
   mutate(GAPG = round(A/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
@@ -240,12 +240,6 @@ ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_ga_pg.png", width
 # 6) Plot of Goal Difference per Game
 
 kpl_merge_bar_17_18_gdpg <- kpl_merge_17_18 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
-  mutate(team_name = if_else(team_name == "SoNy Sugar",
-                             "Sony Sugar", team_name)) |>
   mutate(GDPG = round(GD/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
@@ -277,12 +271,6 @@ ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_gd_pg.png", width
 # 7) Scatterplot of GF vs GA
 
 kpl_merge_bar_17_18_gf_ga <- kpl_merge_17_18 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
-  mutate(team_name = if_else(team_name == "SoNy Sugar",
-                             "Sony Sugar", team_name)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column       
   select(team_name, F, A)
@@ -322,12 +310,6 @@ ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_gf_ga.png", width
 # 8) Scatterplot of PPG vs GD
 
 kpl_merge_bar_17_18_ppg_gd <- kpl_merge_17_18 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name)) |>
-  mutate(team_name = if_else(team_name == "SoNy Sugar",
-                             "Sony Sugar", team_name)) |>
   mutate(PPG = round(P/F, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column       
@@ -367,3 +349,199 @@ ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_ppg_gd.png", widt
 
 # 9) Radar Chart - Sample teams to plot
 
+# a) Non-Percentage metrics
+
+kpl_merge_17_18_non_perc <- kpl_merge_17_18 |>
+  mutate(
+    PPG = P / GP,
+    GPG = F / GP,
+    GAPG = A / GP,
+    GDPG = GD / GP,
+    GF2GA = F / A,
+    GD2P = GD / P
+  )
+
+# b) Percentage metrics
+
+kpl_merge_17_18_perc <- kpl_merge_17_18 |>
+  mutate(
+    WinPerc = (W / GP) * 100,
+    DrawPerc = (D / GP) * 100,
+    LossPerc = (L / GP) * 100,
+    PointsPerc = (P / (GP * 3)) * 100,
+    GoalsSharePerc = (F / (F + A)) * 100,
+    GoalsAgainstPerc = (A / (F + A)) * 100
+  )
+
+# c) Table with selected metrics
+
+kpl_merge_17_18_non_perc_radar <- kpl_merge_17_18_non_perc |>
+  select(team_name, PPG, GPG, GAPG, GF2GA, GDPG, GD2P) 
+
+kpl_merge_17_18_perc_radar <- kpl_merge_17_18_perc |>
+  select(team_name, WinPerc, DrawPerc, LossPerc, PointsPerc, GoalsSharePerc, GoalsAgainstPerc) 
+
+# d) Radar Plots
+
+
+# Top 3 Teams (Percent Metrics)
+
+kpl_merge_17_18_perc_radar_top_3 <- kpl_merge_17_18_perc_radar |>
+  filter(team_name == c("Gor Mahia", "Sofapaka", "Kariobangi Sharks"))
+
+my_top_colors <- c("Gor Mahia" = "#BE8125", 
+                   "Sofapaka" = "#2FBE25", 
+                   "Kariobangi Sharks" = "#BE25AB")
+
+perc_radar_top_3 <- ggradar(kpl_merge_17_18_perc_radar_top_3,
+                            grid.min = 0,
+                            grid.mid = 50,
+                            grid.max = 100,
+                            values.radar = c("", "", ""),
+                            axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
+                                            "Points Earned/Total\nPossible Points (%)", 
+                                            "Goals For/\nTotal Goals (%)", 
+                                            "Goals Against/\nTotal Goals (%)"),
+                            axis.label.size = 8,
+                            fill = TRUE, 
+                            fill.alpha = 0.2,
+                            group.line.width = 1.2,
+                            group.point.size = 3,
+                            group.colours = my_top_colors,
+                            legend.position = "bottom",
+                            legend.text.size = 24,
+                            plot.title = "") +
+  theme(
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+    text = element_text(size = 32),
+    panel.background = element_rect(fill = "azure2", color = "azure2"),
+    plot.background  = element_rect(fill = "azure2",  color = "azure2"),
+    legend.background = element_rect(
+      fill = "azure2",       # or any fill color
+      colour = "black",     # border color
+      linewidth = 0.8,      # border thickness
+      linetype = "solid"
+    ),
+    legend.box.background = element_rect(
+      colour = "black",     # outer box (optional)
+      linewidth = 1
+    )
+  )
+
+perc_radar_top_3 <- perc_radar_top_3 +
+  annotate("text", x = 0, y = 0, label = "0", size = 7.5) +
+  annotate("text", x = 0, y = 50, label = "50", size = 7.5) +
+  annotate("text", x = 0, y = 100, label = "100", size = 7.5)
+
+perc_radar_top_3
+
+ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_perc_radar_top_3.png", height = 12, width = 12, dpi = 300)
+
+
+# Bottom 3 Teams (Percent Metrics)
+
+kpl_merge_17_18_perc_radar_bottom_3 <- kpl_merge_17_18_perc_radar |>
+  filter(team_name == c("Thika United", "Western Stima", "Muhoroni Youth"))
+
+my_bottom_colors <- c("Thika United" = "#BE8125", 
+                      "Western Stima" = "#2FBE25", 
+                      "Muhoroni Youth" = "#BE25AB")
+
+perc_radar_bottom_3 <- ggradar(kpl_merge_17_18_perc_radar_bottom_3,
+                               grid.min = 0,
+                               grid.mid = 50,
+                               grid.max = 100,
+                               values.radar = c("", "", ""),
+                               axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
+                                               "Points Earned/Total\nPossible Points (%)", 
+                                               "Goals For/\nTotal Goals (%)", 
+                                               "Goals Against/\nTotal Goals (%)"),
+                               axis.label.size = 8,
+                               fill = TRUE, 
+                               fill.alpha = 0.2,
+                               group.line.width = 1.2,
+                               group.point.size = 3,
+                               group.colours = my_bottom_colors,
+                               legend.position = "bottom",
+                               legend.text.size = 24,
+                               plot.title = "") +
+  theme(
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+    text = element_text(size = 32),
+    panel.background = element_rect(fill = "azure2", color = "azure2"),
+    plot.background  = element_rect(fill = "azure2",  color = "azure2"),
+    legend.background = element_rect(
+      fill = "azure2",       # or any fill color
+      colour = "black",     # border color
+      linewidth = 0.8,      # border thickness
+      linetype = "solid"
+    ),
+    legend.box.background = element_rect(
+      colour = "black",     # outer box (optional)
+      linewidth = 1
+    )
+  )
+
+perc_radar_bottom_3 <- perc_radar_bottom_3 +
+  annotate("text", x = 0, y = 0, label = "0", size = 7.5) +
+  annotate("text", x = 0, y = 50, label = "50", size = 7.5) +
+  annotate("text", x = 0, y = 100, label = "100", size = 7.5)
+
+perc_radar_bottom_3
+
+ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_perc_radar_bottom_3.png", height = 12, width = 12, dpi = 300)
+
+# Top Bottom 2 Teams (Percent Metrics)
+
+kpl_merge_17_18_perc_radar_top_bottom_2 <- kpl_merge_17_18_perc_radar |>
+  filter(team_name %in% c("Gor Mahia", "Sofapaka", "Western Stima", "Muhoroni Youth"))
+
+my_top_bottom_colors <- c("Gor Mahia" = "#000080", 
+                          "Sofapaka" = "#2FBE25", 
+                          "Western Stima" = "#BE8125", 
+                          "Muhoroni Youth" = "#BE25AB")
+
+perc_radar_top_bottom_2 <- ggradar(kpl_merge_17_18_perc_radar_top_bottom_2,
+                                   grid.min = 0,
+                                   grid.mid = 50,
+                                   grid.max = 100,
+                                   values.radar = c("", "", ""),
+                                   axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
+                                                   "Points Earned/Total\nPossible Points (%)", 
+                                                   "Goals For/\nTotal Goals (%)", 
+                                                   "Goals Against/\nTotal Goals (%)"),
+                                   axis.label.size = 8,
+                                   fill = TRUE, 
+                                   fill.alpha = 0.2,
+                                   group.line.width = 1.2,
+                                   group.point.size = 3,
+                                   group.colours = my_top_bottom_colors,
+                                   legend.position = "bottom",
+                                   legend.text.size = 24,
+                                   plot.title = "") +
+  theme(
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+    text = element_text(size = 32),
+    panel.background = element_rect(fill = "azure2", color = "azure2"),
+    plot.background  = element_rect(fill = "azure2",  color = "azure2"),
+    legend.background = element_rect(
+      fill = "azure2",       # or any fill color
+      colour = "black",     # border color
+      linewidth = 0.8,      # border thickness
+      linetype = "solid"
+    ),
+    legend.box.background = element_rect(
+      colour = "black",     # outer box (optional)
+      linewidth = 1
+    )
+  ) +
+  guides(color = guide_legend(nrow = 2, byrow = TRUE))
+
+perc_radar_top_bottom_2 <- perc_radar_top_bottom_2 +
+  annotate("text", x = 0, y = 0, label = "0", size = 7.5) +
+  annotate("text", x = 0, y = 50, label = "50", size = 7.5) +
+  annotate("text", x = 0, y = 100, label = "100", size = 7.5)
+
+perc_radar_top_bottom_2
+
+ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_perc_radar_top_bottom_2.png", height = 12, width = 12, dpi = 300)
