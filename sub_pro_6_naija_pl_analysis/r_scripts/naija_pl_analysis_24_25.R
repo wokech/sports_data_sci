@@ -12,33 +12,33 @@ library(tidyverse)
 library(RColorBrewer)
 library(ggradar)
 
-# Load the required data
-
-page_24_25 <- read_html("https://africa.espn.com/football/standings/_/seasontype/1/league/nga.1")
-tables_24_25 <- html_table(page_24_25)
-naija_pl_1_24_25 <- tables_24_25[[1]]
-naija_pl_2_24_25 <- tables_24_25[[2]]
-
-naija_pl_1_24_25 <- naija_pl_1_24_25 |>
-  rename(Club = `Regular Season`)
-
-naija_pl_1_24_25 <- naija_pl_1_24_25 |>
-  mutate(
-    matches = str_match(Club, "^([0-9]+)([A-Z]{3})(.*)$"),
-    code_number = matches[, 2],
-    code_letters = matches[, 3],
-    team_name = str_trim(matches[, 4])
-  ) |>
-  select(-matches)
-
-naija_pl_merge_24_25 <- bind_cols(naija_pl_1_24_25, naija_pl_2_24_25)
-
-naija_pl_merge_24_25 <- naija_pl_merge_24_25 |>
-  select(-Club)
-
-# Save data as csv in datasets
-write_csv(naija_pl_merge_24_25, here::here("sub_pro_6_naija_pl_analysis",
-                                         "datasets", "naija_pl_merge_24_25.csv"))
+# # Load the required data
+# 
+# page_24_25 <- read_html("https://africa.espn.com/football/standings/_/seasontype/1/league/nga.1")
+# tables_24_25 <- html_table(page_24_25)
+# naija_pl_1_24_25 <- tables_24_25[[1]]
+# naija_pl_2_24_25 <- tables_24_25[[2]]
+# 
+# naija_pl_1_24_25 <- naija_pl_1_24_25 |>
+#   rename(Club = `Regular Season`)
+# 
+# naija_pl_1_24_25 <- naija_pl_1_24_25 |>
+#   mutate(
+#     matches = str_match(Club, "^([0-9]+)([A-Z]{3})(.*)$"),
+#     code_number = matches[, 2],
+#     code_letters = matches[, 3],
+#     team_name = str_trim(matches[, 4])
+#   ) |>
+#   select(-matches)
+# 
+# naija_pl_merge_24_25 <- bind_cols(naija_pl_1_24_25, naija_pl_2_24_25)
+# 
+# naija_pl_merge_24_25 <- naija_pl_merge_24_25 |>
+#   select(-Club)
+# 
+# # Save data as csv in datasets
+# write_csv(naija_pl_merge_24_25, here::here("sub_pro_6_naija_pl_analysis",
+#                                          "datasets", "naija_pl_merge_24_25.csv"))
 
 # Read in data
 naija_pl_merge_24_25 <- read_csv(here::here("sub_pro_6_naija_pl_analysis", 
@@ -79,7 +79,7 @@ naija_pl_merge_bar_24_25_pt_gd_long %>%
             hjust = -0.05, vjust = -0.25, size = 7, 
             inherit.aes = FALSE) +
   scale_fill_manual(values = c("P" = "purple3", "GD" = "salmon1")) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.25)), 
+  scale_y_continuous(expand = expansion(mult = c(0, 0.2)), 
                      breaks = seq(-40, 80, by = 10)) +
   labs(x = NULL, y = "Value", fill = "Metric") +
   coord_flip() + 
@@ -97,8 +97,10 @@ naija_pl_merge_bar_24_25_pt_gd_long %>%
         legend.title = element_blank(),
         legend.position = "none",
         plot.caption = element_text(family = "Helvetica",size = 12),
-        plot.background = element_rect(fill = "azure2", color = "azure2"), 
-        panel.background = element_rect(fill = "azure2", color = "azure2"))
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
+        panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
 ggsave("sub_pro_6_naija_pl_analysis/images/24_25/naija_pl_analysis_24_25_pt_gd.png", width = 12, height = 12, dpi = 300)
 
@@ -116,7 +118,8 @@ ggplot(naija_pl_merge_lollipop_24_25_w_l) +
                color = "darkolivegreen3", linewidth = 4) +
   geom_point(aes(x = W_PCT, y = team_name), color = "darkgreen", size = 8) +
   geom_point(aes(x = L_PCT, y = team_name), color = "goldenrod2", size = 8) +
-  scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 1),
+                     expand = expansion(mult = c(0.05, 0.1))) +
   labs(x = "", y = "",
        title = "") +
   theme_minimal() +
@@ -130,8 +133,10 @@ ggplot(naija_pl_merge_lollipop_24_25_w_l) +
         plot.title = element_markdown(family = "Helvetica",size = 36, hjust = 0.5),
         legend.title = element_blank(),
         plot.caption = element_text(family = "Helvetica",size = 12),
-        plot.background = element_rect(fill = "azure2", color = "azure2"), 
-        panel.background = element_rect(fill = "azure2", color = "azure2"))
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
+        panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
 ggsave("sub_pro_6_naija_pl_analysis/images/24_25/naija_pl_analysis_24_25_w_l.png", width = 12, height = 12, dpi = 300)
 
@@ -161,8 +166,10 @@ ggplot(naija_pl_merge_bar_24_25_ppg) +
         plot.title = element_markdown(family = "Helvetica",size = 36, hjust = 0.5),
         legend.title = element_blank(),
         plot.caption = element_text(family = "Helvetica",size = 12),
-        plot.background = element_rect(fill = "azure2", color = "azure2"), 
-        panel.background = element_rect(fill = "azure2", color = "azure2"))
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
+        panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
 ggsave("sub_pro_6_naija_pl_analysis/images/24_25/naija_pl_analysis_24_25_ppg.png", width = 12, height = 12, dpi = 300)
 
@@ -176,8 +183,8 @@ naija_pl_merge_bar_24_25_gpg <- naija_pl_merge_24_25 |>
 
 ggplot(naija_pl_merge_bar_24_25_gpg) +
   geom_segment(aes(x = 0, xend = GPG, y = team_name, yend = team_name), 
-               color = "yellow3", linewidth = 4) +
-  geom_point(aes(x = GPG, y = team_name), color = "goldenrod3", size = 8) +
+               color = "yellow4", linewidth = 4) +
+  geom_point(aes(x = GPG, y = team_name), color = "goldenrod4", size = 8) +
   scale_x_continuous() +
   labs(x = "", y = "",
        title = "") +
@@ -192,8 +199,10 @@ ggplot(naija_pl_merge_bar_24_25_gpg) +
         plot.title = element_markdown(family = "Helvetica",size = 36, hjust = 0.5),
         legend.title = element_blank(),
         plot.caption = element_text(family = "Helvetica",size = 12),
-        plot.background = element_rect(fill = "azure2", color = "azure2"), 
-        panel.background = element_rect(fill = "azure2", color = "azure2"))
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
+        panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
 ggsave("sub_pro_6_naija_pl_analysis/images/24_25/naija_pl_analysis_24_25_gpg.png", width = 12, height = 12, dpi = 300)
 
@@ -210,7 +219,7 @@ ggplot(naija_pl_merge_bar_24_25_gapg) +
   geom_segment(aes(x = 0, xend = GAPG, y = team_name, yend = team_name), 
                color = "grey", linewidth = 4) +
   geom_point(aes(x = GAPG, y = team_name), color = "black", size = 8) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.1))) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.15))) +
   labs(x = "", y = "",
        title = "") +
   theme_minimal() +
@@ -224,8 +233,10 @@ ggplot(naija_pl_merge_bar_24_25_gapg) +
         plot.title = element_markdown(family = "Helvetica",size = 36, hjust = 0.5),
         legend.title = element_blank(),
         plot.caption = element_text(family = "Helvetica",size = 12),
-        plot.background = element_rect(fill = "azure2", color = "azure2"), 
-        panel.background = element_rect(fill = "azure2", color = "azure2"))
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
+        panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
 ggsave("sub_pro_6_naija_pl_analysis/images/24_25/naija_pl_analysis_24_25_ga_pg.png", width = 12, height = 12, dpi = 300)
 
@@ -242,7 +253,7 @@ ggplot(naija_pl_merge_bar_24_25_gdpg) +
   geom_segment(aes(x = 0, xend = GDPG, y = team_name, yend = team_name), 
                color = "lightgreen", linewidth = 4) +
   geom_point(aes(x = GDPG, y = team_name), color = "green4", size = 8) +
-  scale_x_continuous() +
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.1))) +
   labs(x = "", y = "",
        title = "") +
   theme_minimal() +
@@ -256,8 +267,10 @@ ggplot(naija_pl_merge_bar_24_25_gdpg) +
         plot.title = element_markdown(family = "Helvetica",size = 36, hjust = 0.5),
         legend.title = element_blank(),
         plot.caption = element_text(family = "Helvetica",size = 12),
-        plot.background = element_rect(fill = "azure2", color = "azure2"), 
-        panel.background = element_rect(fill = "azure2", color = "azure2"))
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
+        panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
 ggsave("sub_pro_6_naija_pl_analysis/images/24_25/naija_pl_analysis_24_25_gd_pg.png", width = 12, height = 12, dpi = 300)
 
@@ -273,7 +286,7 @@ against_thresh <- median(naija_pl_merge_bar_24_25_gf_ga$A)
 for_thresh <- median(naija_pl_merge_bar_24_25_gf_ga$F)
 
 ggplot(naija_pl_merge_bar_24_25_gf_ga, aes(x = A, y = F)) +
-  geom_point(color = "orange", size = 6) +
+  geom_point(color = "brown4", size = 6) +
   geom_text_repel(aes(label = team_name), vjust = -0.5, size = 8) +
   labs(x = "Goals Against", y = "Goals For", title = "") +
   annotate("rect", xmin = -Inf, xmax = against_thresh,
@@ -294,8 +307,10 @@ ggplot(naija_pl_merge_bar_24_25_gf_ga, aes(x = A, y = F)) +
         plot.title = element_markdown(family = "Helvetica",size = 36, hjust = 0.5),
         legend.title = element_blank(),
         plot.caption = element_text(family = "Helvetica",size = 12),
-        plot.background = element_rect(fill = "azure2", color = "azure2"), 
-        panel.background = element_rect(fill = "azure2", color = "azure2"))
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
+        panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
 ggsave("sub_pro_6_naija_pl_analysis/images/24_25/naija_pl_analysis_24_25_gf_ga.png", width = 12, height = 12, dpi = 300)
 
@@ -315,11 +330,12 @@ ppg_thresh <- median(naija_pl_merge_bar_24_25_ppg_gd$PPG)
 ggplot(naija_pl_merge_bar_24_25_ppg_gd, aes(x = GD, y = PPG)) +
   geom_point(color = "brown4", size = 6) +
   geom_text_repel(aes(label = team_name), vjust = -0.5, size = 8) +
-  labs(x = "Goal Difference", y = "Points Per Game", title = "") +
+  labs(x = "Goal Difference", y = "Points Per Goal", title = "") +
   annotate("rect", xmin = goal_diff_thresh, xmax = Inf,
            ymin = ppg_thresh, ymax = Inf, alpha = 0.2, fill = "pink") +
   geom_hline(yintercept = ppg_thresh, linetype = "dashed", color = "gray") +
   geom_vline(xintercept = goal_diff_thresh, linetype = "dashed", color = "gray") +
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.1))) +
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
@@ -334,8 +350,10 @@ ggplot(naija_pl_merge_bar_24_25_ppg_gd, aes(x = GD, y = PPG)) +
         plot.title = element_markdown(family = "Helvetica",size = 36, hjust = 0.5),
         legend.title = element_blank(),
         plot.caption = element_text(family = "Helvetica",size = 12),
-        plot.background = element_rect(fill = "azure2", color = "azure2"), 
-        panel.background = element_rect(fill = "azure2", color = "azure2"))
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
+        panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
 ggsave("sub_pro_6_naija_pl_analysis/images/24_25/naija_pl_analysis_24_25_ppg_gd.png", width = 12, height = 12, dpi = 300)
 
@@ -407,10 +425,10 @@ perc_radar_top_3 <- ggradar(naija_pl_merge_24_25_perc_radar_top_3,
   theme(
     plot.margin = unit(c(0, 0, 0, 0), "cm"),
     text = element_text(size = 32),
-    panel.background = element_rect(fill = "azure2", color = "azure2"),
-    plot.background  = element_rect(fill = "azure2",  color = "azure2"),
+    panel.background = element_rect(fill = "bisque1", color = "bisque1"),
+    plot.background  = element_rect(fill = "bisque1",  color = "bisque1"),
     legend.background = element_rect(
-      fill = "azure2",       # or any fill color
+      fill = "bisque1",       # or any fill color
       colour = "black",     # border color
       linewidth = 0.8,      # border thickness
       linetype = "solid"
@@ -461,10 +479,10 @@ perc_radar_bottom_3 <- ggradar(naija_pl_merge_24_25_perc_radar_bottom_3,
   theme(
     plot.margin = unit(c(0, 0, 0, 0), "cm"),
     text = element_text(size = 32),
-    panel.background = element_rect(fill = "azure2", color = "azure2"),
-    plot.background  = element_rect(fill = "azure2",  color = "azure2"),
+    panel.background = element_rect(fill = "bisque1", color = "bisque1"),
+    plot.background  = element_rect(fill = "bisque1",  color = "bisque1"),
     legend.background = element_rect(
-      fill = "azure2",       # or any fill color
+      fill = "bisque1",       # or any fill color
       colour = "black",     # border color
       linewidth = 0.8,      # border thickness
       linetype = "solid"
@@ -516,10 +534,10 @@ perc_radar_top_bottom_2 <- ggradar(naija_pl_merge_24_25_perc_radar_top_bottom_2,
   theme(
     plot.margin = unit(c(0, 0, 0, 0), "cm"),
     text = element_text(size = 32),
-    panel.background = element_rect(fill = "azure2", color = "azure2"),
-    plot.background  = element_rect(fill = "azure2",  color = "azure2"),
+    panel.background = element_rect(fill = "bisque1", color = "bisque1"),
+    plot.background  = element_rect(fill = "bisque1",  color = "bisque1"),
     legend.background = element_rect(
-      fill = "azure2",       # or any fill color
+      fill = "bisque1",       # or any fill color
       colour = "black",     # border color
       linewidth = 0.8,      # border thickness
       linetype = "solid"

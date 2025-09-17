@@ -322,7 +322,7 @@ ppg_thresh <- median(kpl_merge_bar_17_18_ppg_gd$PPG)
 ggplot(kpl_merge_bar_17_18_ppg_gd, aes(x = GD, y = PPG)) +
   geom_point(color = "brown4", size = 6) +
   geom_text_repel(aes(label = team_name), vjust = -0.5, size = 8) +
-  labs(x = "Goal Difference", y = "Points Per Game", title = "") +
+  labs(x = "Goal Difference", y = "Points per Goal", title = "") +
   annotate("rect", xmin = goal_diff_thresh, xmax = Inf,
            ymin = ppg_thresh, ymax = Inf, alpha = 0.2, fill = "pink") +
   geom_hline(yintercept = ppg_thresh, linetype = "dashed", color = "gray") +
