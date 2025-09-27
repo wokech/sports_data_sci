@@ -86,19 +86,27 @@ fb_ref_big_5_euro_league_24_25_clean_africa <- fb_ref_big_5_euro_league_24_25_cl
 
 fifa_rank_fb_ref <- stringdist_inner_join(fb_ref_big_5_euro_league_24_25_clean_africa, 
                                           fb_ref_big_5_euro_league_fifa_ranking_july_2025, 
-                                          by = "nation", max_dist = 1)
+                                          by = "nation",
+                                          method = "jw",  
+                                          max_dist = 0.1, 
+                                          distance_col = "dist")
+
+# Get minutes per player
+
+fifa_rank_fb_ref <- fifa_rank_fb_ref |>
+  mutate(minutes_player = round((min/x_players), 0))
 
 # Plot of Country vs Number of Players
 
-fb_ref_big_5_euro_league_24_25_clean_africa |> 
+fifa_rank_fb_ref |> 
   arrange(desc(x_players)) |>
-  ggplot(aes(x = reorder(nation, x_players), y = x_players)) +
+  ggplot(aes(x = reorder(nation.x, x_players), y = x_players)) +
   geom_col(fill = "skyblue") + 
   geom_text(aes(label = x_players, y = x_players-0.1),  
             hjust = 1,                           
             color = "black",                        
             size = 8) + 
-  geom_text(aes(label = nation, y = x_players+0.3),  
+  geom_text(aes(label = nation.x, y = x_players+0.3),  
             hjust = 0,                           
             color = "black",                        
             size = 7) +  
@@ -112,7 +120,7 @@ fb_ref_big_5_euro_league_24_25_clean_africa |>
   scale_y_continuous(breaks = seq(0, 50, by = 10),
                      minor_breaks = seq(0, 50, by = 10),
                      expand = expansion(mult = c(0, 0.2))) +
-  theme(axis.title.x = element_text(size = 25),
+  theme(axis.title.x = element_text(size = 25, margin = margin(t = 15)),
         axis.title.y = element_text(size = 25),
         axis.text.x = element_text(size = 25),
         axis.text.y = element_blank(),
@@ -135,12 +143,12 @@ ggsave("sub_pro_9_fb_ref_big_5_euro_league/images/country_num_players.png", widt
 
 # Plot of Country vs Minutes Played
 
-fb_ref_big_5_euro_league_24_25_clean_africa |> 
+fifa_rank_fb_ref |> 
   filter(!is.na(min)) |>
   arrange(desc(min)) |>
-  ggplot(aes(x = reorder(nation, min), y = min)) +
+  ggplot(aes(x = reorder(nation.x, min), y = min)) +
   geom_col(fill = "skyblue") + 
-  geom_text(aes(label = min, y = min+10000),  
+  geom_text(aes(label = comma(min), y = min+10000),
             hjust = 1,                           
             color = "black",                        
             size = 8) + 
@@ -153,13 +161,14 @@ fb_ref_big_5_euro_league_24_25_clean_africa |>
        caption = "Data Source: FBRef") +
   scale_y_continuous(breaks = seq(0, 55000, by = 10000),
                      minor_breaks = seq(0, 55000, by = 10000),
-                     expand = expansion(mult = c(0, 0.05))) +
-  theme(axis.title.x = element_text(size = 25),
+                     expand = expansion(mult = c(0, 0.05)),
+                     labels = label_number(scale_cut = cut_short_scale())) +
+  theme(axis.title.x = element_text(size = 25, margin = margin(t = 15)),
         axis.title.y = element_text(size = 25),
         axis.text.x = element_text(size = 25),
         axis.text.y = element_text(size = 25),
         axis.ticks.length.x = unit(0.2, "cm"),  # Lengthen the ticks
-        axis.ticks.minor.x = element_line(color = "black", size = 2),  # Show minor ticks
+        #axis.ticks.major.x = element_line(color = "black", size = 2),  # Show minor ticks
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
         plot.title = element_blank(),
@@ -176,6 +185,51 @@ fb_ref_big_5_euro_league_24_25_clean_africa |>
 ggsave("sub_pro_9_fb_ref_big_5_euro_league/images/country_min_played.png", width = 12, height = 12, dpi = 300)
 
 
+# Plot of Country vs Minutes per Player
+
+fifa_rank_fb_ref |> 
+  filter(!is.na(minutes_player)) |>
+  filter(x_players > 4) |>
+  arrange(desc(minutes_player)) |>
+  ggplot(aes(x = reorder(nation.x, minutes_player), y = minutes_player)) +
+  geom_col(fill = "skyblue") + 
+  geom_text(aes(label = comma(minutes_player), y = minutes_player+300),
+            hjust = 1,                           
+            color = "black",                        
+            size = 8) + 
+  coord_flip() +
+  theme_classic() +
+  labs(x = "",
+       y = "Number of Minutes Played per Player",
+       title = "",
+       subtitle = "",
+       caption = "Data Source: FBRef") +
+  scale_y_continuous(breaks = seq(0, 2000, by = 500),
+                     minor_breaks = seq(0, 2000, by = 500),
+                     expand = expansion(mult = c(0, 0.05)),
+                     labels = label_comma()) +
+  theme(axis.title.x = element_text(size = 25, margin = margin(t = 15)),
+        axis.title.y = element_text(size = 25),
+        axis.text.x = element_text(size = 25),
+        axis.text.y = element_text(size = 25),
+        axis.ticks.length.x = unit(0.2, "cm"),  # Lengthen the ticks
+        #axis.ticks.major.x = element_line(color = "black", size = 2),  # Show minor ticks
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.title = element_blank(),
+        plot.subtitle = element_blank(),
+        plot.caption = element_blank(),
+        plot.background = element_rect(fill = "bisque1", colour = "bisque1"),
+        panel.background = element_rect(fill = "bisque1", colour = "bisque1"),
+        panel.grid.major = element_blank(),  # removes major
+        panel.grid.minor = element_blank(),   # removes minor
+        plot.title.position = 'plot',
+        legend.title = element_blank(),
+        legend.position = "none") 
+
+ggsave("sub_pro_9_fb_ref_big_5_euro_league/images/country_min_per_player.png", width = 12, height = 12, dpi = 300)
+
+
 # Correlation between FIFA ranking and the number of players in the top 5 leagues
 
 # FIFA ranking (July 2025) 
@@ -185,6 +239,7 @@ ggsave("sub_pro_9_fb_ref_big_5_euro_league/images/country_min_played.png", width
 # Thresholds
 num_players_thresh <- median(fifa_rank_fb_ref$x_players)
 min_played_thresh <- median(fifa_rank_fb_ref$min, na.rm = TRUE)
+min_per_player_thresh <- median(fifa_rank_fb_ref$minutes_player, na.rm = TRUE)
 fifa_ranking_thresh <- median(fifa_rank_fb_ref$fifa_ranking_july_2025)
 
 fifa_rank_fb_ref <- fifa_rank_fb_ref |>
@@ -196,16 +251,16 @@ fifa_rank_fb_ref <- fifa_rank_fb_ref |>
 ggplot(fifa_rank_fb_ref, aes(x = fifa_ranking_july_2025, y = min)) +
   geom_jitter(color = "brown4", size =3) +
   geom_text_repel(data = subset(fifa_rank_fb_ref, fifa_ranking_july_2025 < fifa_ranking_thresh), 
-                  aes(label = nation.x), color = "brown4", size = 6) +
+                  aes(label = nation.x), color = "brown4", size = 8) +
   labs(x = "FIFA Ranking (July 2025)", y = "Minutes Played", title = "") +
   annotate("rect", xmin = -Inf, xmax = fifa_ranking_thresh,
-           ymin = -Inf, ymax = min_played_thresh, alpha = 0.1, fill = "blue") +
+           ymin = min_played_thresh, ymax = Inf, alpha = 0.1, fill = "blue") +
   geom_hline(yintercept = min_played_thresh, linetype = "dashed", color = "gray") +
   geom_vline(xintercept = fifa_ranking_thresh, linetype = "dashed", color = "gray") +
   scale_y_continuous(labels = label_comma()) +
   theme_minimal() +
-  theme(axis.title.x =element_text(size = 32),
-        axis.title.y =element_text(size = 32, angle = 90),
+  theme(axis.title.x =element_text(size = 32, margin = margin(t = 15)),
+        axis.title.y =element_text(size = 32, angle = 90, margin = margin(r = 15)),
         axis.text.x =element_text(size = 24),
         axis.text.y =element_text(size = 24),
         axis.line.x = element_line(),
@@ -229,16 +284,16 @@ ggsave("sub_pro_9_fb_ref_big_5_euro_league/images/fifa_ranking_min_played.png", 
 ggplot(fifa_rank_fb_ref, aes(x = fifa_ranking_july_2025, y = x_players)) +
   geom_jitter(color = "brown4", size =3) +
   geom_text_repel(data = subset(fifa_rank_fb_ref, fifa_ranking_july_2025 < fifa_ranking_thresh),
-                  aes(label = nation.x), color = "brown4", size = 6) +
+                  aes(label = nation.x), color = "brown4", size = 8) +
   labs(x = "FIFA Ranking (July 2025)", y = "Number of Players", title = "") +
   annotate("rect", xmin = -Inf, xmax = fifa_ranking_thresh,
-           ymin = -Inf, ymax = num_players_thresh, alpha = 0.1, fill = "blue") +
+           ymin = num_players_thresh, ymax = Inf, alpha = 0.1, fill = "blue") +
   geom_hline(yintercept = num_players_thresh, linetype = "dashed", color = "gray") +
   geom_vline(xintercept = fifa_ranking_thresh, linetype = "dashed", color = "gray") +
   scale_y_continuous(labels = label_comma()) +
   theme_minimal() +
-  theme(axis.title.x =element_text(size = 32),
-        axis.title.y =element_text(size = 32, angle = 90),
+  theme(axis.title.x =element_text(size = 32, margin = margin(t = 15)),
+        axis.title.y =element_text(size = 32, angle = 90, margin = margin(r = 15)),
         axis.text.x =element_text(size = 24),
         axis.text.y =element_text(size = 24),
         axis.line.x = element_line(),
@@ -257,3 +312,38 @@ ggplot(fifa_rank_fb_ref, aes(x = fifa_ranking_july_2025, y = x_players)) +
 
 ggsave("sub_pro_9_fb_ref_big_5_euro_league/images/fifa_ranking_num_players.png", width = 12, height = 12, dpi = 300)
 
+
+# FIFA ranking and Number of Minutes per Player
+
+fifa_rank_fb_ref |>
+  filter(x_players > 4) |>
+  ggplot(aes(x = fifa_ranking_july_2025, y = minutes_player)) +
+  geom_jitter(color = "brown4", size = 3) +
+  geom_text_repel(data = subset(fifa_rank_fb_ref, fifa_ranking_july_2025 < fifa_ranking_thresh),
+                  aes(label = nation.x), color = "brown4", size = 8) +
+  labs(x = "FIFA Ranking (July 2025)", y = "Number of Minutes Played per Player", title = "") +
+  annotate("rect", xmin = -Inf, xmax = fifa_ranking_thresh,
+           ymin = min_per_player_thresh, ymax = Inf, alpha = 0.1, fill = "blue") +
+  geom_hline(yintercept = min_per_player_thresh, linetype = "dashed", color = "gray") +
+  geom_vline(xintercept = fifa_ranking_thresh, linetype = "dashed", color = "gray") +
+  scale_y_continuous(labels = label_comma()) +
+  theme_minimal() +
+  theme(axis.title.x =element_text(size = 32, margin = margin(t = 15)),
+        axis.title.y =element_text(size = 32, angle = 90, margin = margin(r = 15)),
+        axis.text.x =element_text(size = 24),
+        axis.text.y =element_text(size = 24),
+        axis.line.x = element_line(),
+        axis.ticks.x = element_line(),
+        axis.ticks.length.x = unit(5, "pt"),
+        axis.line.y = element_line(),
+        axis.ticks.y = element_line(),
+        axis.ticks.length.y = unit(5, "pt"),
+        plot.title = element_markdown(family = "Helvetica",size = 36, hjust = 0.5),
+        legend.title = element_blank(),
+        plot.caption = element_text(family = "Helvetica",size = 12),
+        plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
+        panel.background = element_rect(fill = "bisque1", color = "bisque1"),
+        panel.grid.major = element_blank(),  # removes major
+        panel.grid.minor = element_blank())   # removes minor
+
+ggsave("sub_pro_9_fb_ref_big_5_euro_league/images/fifa_ranking_num_min_per_player.png", width = 12, height = 12, dpi = 300)

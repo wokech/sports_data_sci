@@ -77,8 +77,8 @@ uganda_pl_merge_bar_24_25_pt_gd_long %>%
             hjust = -0.05, vjust = -0.25, size = 7, 
             inherit.aes = FALSE) +
   scale_fill_manual(values = c("P" = "purple3", "GD" = "salmon1")) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.1)), 
-                     breaks = seq(-40, 80, by = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.15)), 
+                     breaks = seq(-60, 80, by = 10)) +
   labs(x = NULL, y = "Value", fill = "Metric") +
   coord_flip() + 
   labs(x = "", y = "",
