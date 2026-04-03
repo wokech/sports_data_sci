@@ -1,21 +1,22 @@
 # Formula 1 analysis in R
 # Laureano Gallardo / R Programming Books
 # https://rprogrammingbooks.com/formula-1-analysis-r-f1datar/
+# https://github.com/SCasanova/f1dataR
 
 # A) Load the required libraries and datasets
 
-install.packages(c(
-  "f1dataR",
-  "tidyverse",
-  "lubridate",
-  "janitor",
-  "scales",
-  "slider",
-  "broom",
-  "tidymodels",
-  "gt",
-  "patchwork"
-))
+# install.packages(c(
+#   "f1dataR",
+#   "tidyverse",
+#   "lubridate",
+#   "janitor",
+#   "scales",
+#   "slider",
+#   "broom",
+#   "tidymodels",
+#   "gt",
+#   "patchwork"
+# ))
 
 library(f1dataR)
 library(tidyverse)
@@ -56,3 +57,21 @@ results_2024 %>%
   select(driver_id, constructor_id, grid, position, points, status) %>%
   glimpse()
 
+# Build a season summary table
+
+season_table <- results_2024 %>%
+  clean_names() %>%
+  group_by(driver_id, constructor_id) %>%
+  summarise(
+    races = n(),
+    wins = sum(position == 1, na.rm = TRUE),
+    podiums = sum(position <= 3, na.rm = TRUE),
+    avg_finish = mean(position, na.rm = TRUE),
+    avg_grid = mean(grid, na.rm = TRUE),
+    points = sum(points, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(points), avg_finish)
+
+season_table
+View(season_table)
