@@ -25,6 +25,7 @@ library(ggrepel)
 library(patchwork)
 library(readxl)
 library(stringr)
+library(writexl)
 
 # Load the required data
 
@@ -84,7 +85,9 @@ concacaf_fifa_tm_clean_analysis <- concacaf_fifa_tm_clean %>%
   mutate(o_age = as.numeric(o_age)) %>%
   select(ranking, team, confederation, points, squad_size, o_age,
          most_valuable_player, team_market_value_euros_numeric,
-         avg_player_market_value_euros_numeric, top_player_value_euros_numeric)
+         avg_player_market_value_euros_numeric, 
+         top_player_value_euros_numeric, players_playing_abroad_percent)
 
-write_csv(concacaf_fifa_tm_clean_analysis,
-          "sub_pro_12_fifa_tm_analysis/datasets/processed_2026/concacaf_fifa_tm_clean_analysis.csv")
+
+write_xlsx(concacaf_fifa_tm_clean_analysis,
+          "sub_pro_12_fifa_tm_analysis/datasets/processed_2026/concacaf_fifa_tm_clean_analysis.xlsx")
