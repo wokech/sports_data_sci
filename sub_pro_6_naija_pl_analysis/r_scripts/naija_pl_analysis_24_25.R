@@ -14,7 +14,7 @@ library(ggradar)
 
 # # Load the required data
 # 
-# page_24_25 <- read_html("https://africa.espn.com/football/standings/_/seasontype/1/league/nga.1")
+# page_24_25 <- read_html("https://www.espn.com/soccer/standings/_/league/NGA.1/seasontype/1/season/2024")
 # tables_24_25 <- html_table(page_24_25)
 # naija_pl_1_24_25 <- tables_24_25[[1]]
 # naija_pl_2_24_25 <- tables_24_25[[2]]

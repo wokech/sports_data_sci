@@ -1,4 +1,4 @@
-# KPL League Table Analysis (2024-2025)
+# Nigeria PL League Table Analysis (2022-2023) - NOT INCLUDED!!!
 
 # Load the required libraries
 library(rvest) # webscrape
@@ -10,80 +10,75 @@ library(ggrepel)
 library(fmsb)
 library(tidyverse)
 library(RColorBrewer)
-# devtools::install_github("ricardo-bion/ggradar", 
-#                          dependencies = TRUE)
 library(ggradar)
-library(dplyr)
-library(scales)
-library(ggplot2)
-library(tibble)
 
-# # Load the required data
-# 
-# page_24_25 <- read_html("https://www.espn.com/soccer/standings/_/league/ken.1/season/2024")
-# tables_24_25 <- html_table(page_24_25)
-# kpl_1_24_25 <- tables_24_25[[1]]
-# kpl_2_24_25 <- tables_24_25[[2]]
-# 
-# kpl_1_24_25 <- kpl_1_24_25 |>
-#   rename(Club = `2024-25 KPL`)
-# 
-# kpl_1_24_25 <- kpl_1_24_25 |>
-#   mutate(
-#     matches = str_match(Club, "^([0-9]+)([A-Z]{3})(.*)$"),
-#     code_number = matches[, 2],
-#     code_letters = matches[, 3],
-#     team_name = str_trim(matches[, 4])
-#   ) |>
-#   select(-matches)
-# 
-# kpl_merge_24_25 <- bind_cols(kpl_1_24_25, kpl_2_24_25) 
-# 
-# kpl_merge_24_25 <- kpl_merge_24_25 |>
-#   select(-Club)
-# 
-# # Save data as csv in datasets
-# write_csv(kpl_merge_24_25, here::here("sub_pro_1_kpl_analysis", 
-#                                      "datasets", "kpl_merge_24_25.csv"))
+# Load the required data
+page_22_23 <- read_html("https://www.espn.com/soccer/standings/_/league/NGA.1/seasontype/1/season/2022")
+tables_22_23 <- html_table(page_22_23)
+naija_pl_1_22_23 <- tables_22_23[[1]]
+naija_pl_2_22_23 <- tables_22_23[[2]]
+
+naija_pl_1_22_23 <- naija_pl_1_22_23 |>
+  rename(Club = `X1`)
+
+naija_pl_1_22_23 <- naija_pl_1_22_23 |>
+  mutate(
+    matches = str_match(Club, "^([0-9]+)([A-Z]{3})(.*)$"),
+    code_number = matches[, 2],
+    code_letters = matches[, 3],
+    team_name = str_trim(matches[, 4])
+  ) |>
+  select(-matches)
+
+naija_pl_merge_22_23 <- bind_cols(naija_pl_1_22_23, naija_pl_2_22_23)
+
+naija_pl_merge_22_23 <- naija_pl_merge_22_23 |>
+  select(-Club)
+
+# Save data as csv in datasets
+write_csv(naija_pl_merge_22_23, here::here("sub_pro_6_naija_pl_analysis",
+                                         "datasets", "naija_pl_merge_22_23.csv"))
 
 # Read in data
-kpl_merge_24_25 <- read_csv(here::here("sub_pro_1_kpl_analysis", 
-                                       "datasets", "kpl_merge_24_25.csv"))
+naija_pl_merge_22_23 <- read_csv(here::here("sub_pro_6_naija_pl_analysis", 
+                                          "datasets", "naija_pl_merge_22_23.csv"))
 
-kpl_merge_24_25 <- kpl_merge_24_25 |>
-  mutate(team_name = if_else(team_name == "CPosta Rangers",
-                             "Posta Rangers", team_name)) |>
-  mutate(team_name = if_else(team_name == "Bandari Mtwara",
-                             "Bandari", team_name))
+naija_pl_merge_22_23 <- naija_pl_merge_22_23 |>
+  mutate(team_name = if_else(team_name == "CRivers United FC",
+                             "Rivers United FC", team_name)) |>
+  mutate(team_name = if_else(team_name == "AAbia Warriors",
+                             "Abia Warriors", team_name)) |>
+  mutate(team_name = if_else(team_name == "AAkwa United",
+                             "Akwa United", team_name))
 
 # Display the structure of the data
-str(kpl_merge_24_25)
-head(kpl_merge_24_25)
+str(naija_pl_merge_22_23)
+head(naija_pl_merge_22_23)
 
 # 1) Plot of Points and Goal Differences in a Bar Chart
 
-kpl_merge_bar_24_25_pt_gd <- kpl_merge_24_25 |>
+naija_pl_merge_bar_22_23_pt_gd <- naija_pl_merge_22_23 |>
   select(team_name, GD, P)
 
-team_order <- kpl_merge_bar_24_25_pt_gd %>%
+team_order <- naija_pl_merge_bar_22_23_pt_gd %>%
   arrange(desc(P), desc(GD)) %>%
   pull(team_name)
 
-kpl_merge_bar_24_25_pt_gd_long <- kpl_merge_bar_24_25_pt_gd |>
+naija_pl_merge_bar_22_23_pt_gd_long <- naija_pl_merge_bar_22_23_pt_gd |>
   pivot_longer(cols = c(P, GD), names_to = "metric", values_to = "value")
 
 # Plot
 
-kpl_merge_bar_24_25_pt_gd_long %>%
+naija_pl_merge_bar_22_23_pt_gd_long %>%
   mutate(team_name = factor(team_name, levels = rev(team_order))) %>%
   ggplot(aes(x = team_name, y = value, fill = metric)) +
   geom_col(position = position_dodge()) +
-  geom_text(data = kpl_merge_bar_24_25_pt_gd,
+  geom_text(data = naija_pl_merge_bar_22_23_pt_gd,
             aes(x = team_name, y = P, label = team_name),
             hjust = -0.05, vjust = -0.25, size = 7, 
             inherit.aes = FALSE) +
   scale_fill_manual(values = c("P" = "purple3", "GD" = "salmon1")) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.25)), 
+  scale_y_continuous(expand = expansion(mult = c(0, 0.2)), 
                      breaks = seq(-40, 80, by = 10)) +
   labs(x = NULL, y = "Value", fill = "Metric") +
   coord_flip() + 
@@ -106,23 +101,24 @@ kpl_merge_bar_24_25_pt_gd_long %>%
         plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
         panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_pt_gd.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_6_naija_pl_analysis/images/22_23/naija_pl_analysis_22_23_pt_gd.png", width = 12, height = 12, dpi = 300)
 
 # 2) Plot of Wins and Losses in a Lollipop Chart
 
-kpl_merge_lollipop_24_25_w_l <- kpl_merge_24_25 |>
+naija_pl_merge_lollipop_22_23_w_l <- naija_pl_merge_22_23 |>
   mutate(W_PCT = round(W/GP, 3),
          L_PCT = round(L/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
   select(team_name, W_PCT, L_PCT, P) 
 
-ggplot(kpl_merge_lollipop_24_25_w_l) +
+ggplot(naija_pl_merge_lollipop_22_23_w_l) +
   geom_segment(aes(x = L_PCT, xend = W_PCT, y = team_name, yend = team_name), 
                color = "darkolivegreen3", linewidth = 4) +
   geom_point(aes(x = W_PCT, y = team_name), color = "darkgreen", size = 8) +
   geom_point(aes(x = L_PCT, y = team_name), color = "goldenrod2", size = 8) +
-  scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 1),
+                     expand = expansion(mult = c(0.05, 0.1))) +
   labs(x = "", y = "",
        title = "") +
   theme_minimal() +
@@ -141,17 +137,17 @@ ggplot(kpl_merge_lollipop_24_25_w_l) +
         plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
         panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_w_l.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_6_naija_pl_analysis/images/22_23/naija_pl_analysis_22_23_w_l.png", width = 12, height = 12, dpi = 300)
 
 # 3) Plot of Points per Goal
 
-kpl_merge_bar_24_25_ppg <- kpl_merge_24_25 |>
+naija_pl_merge_bar_22_23_ppg <- naija_pl_merge_22_23 |>
   mutate(PPG = round(P/F, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column       
   select(team_name, PPG) 
 
-ggplot(kpl_merge_bar_24_25_ppg) +
+ggplot(naija_pl_merge_bar_22_23_ppg) +
   geom_segment(aes(x = 0, xend = PPG, y = team_name, yend = team_name), 
                color = "salmon", linewidth = 4) +
   geom_point(aes(x = PPG, y = team_name), color = "brown4", size = 8) +
@@ -174,17 +170,17 @@ ggplot(kpl_merge_bar_24_25_ppg) +
         plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
         panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_ppg.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_6_naija_pl_analysis/images/22_23/naija_pl_analysis_22_23_ppg.png", width = 12, height = 12, dpi = 300)
 
 # 4) Plot of Goals per Game
 
-kpl_merge_bar_24_25_gpg <- kpl_merge_24_25 |>
+naija_pl_merge_bar_22_23_gpg <- naija_pl_merge_22_23 |>
   mutate(GPG = round(F/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
   select(team_name, GPG) 
 
-ggplot(kpl_merge_bar_24_25_gpg) +
+ggplot(naija_pl_merge_bar_22_23_gpg) +
   geom_segment(aes(x = 0, xend = GPG, y = team_name, yend = team_name), 
                color = "yellow4", linewidth = 4) +
   geom_point(aes(x = GPG, y = team_name), color = "goldenrod4", size = 8) +
@@ -207,22 +203,22 @@ ggplot(kpl_merge_bar_24_25_gpg) +
         plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
         panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_gpg.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_6_naija_pl_analysis/images/22_23/naija_pl_analysis_22_23_gpg.png", width = 12, height = 12, dpi = 300)
 
 
 # 5) Plot of Goals Against per Game
 
-kpl_merge_bar_24_25_gapg <- kpl_merge_24_25 |>
+naija_pl_merge_bar_22_23_gapg <- naija_pl_merge_22_23 |>
   mutate(GAPG = round(A/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
   select(team_name, GAPG) 
 
-ggplot(kpl_merge_bar_24_25_gapg) +
+ggplot(naija_pl_merge_bar_22_23_gapg) +
   geom_segment(aes(x = 0, xend = GAPG, y = team_name, yend = team_name), 
                color = "grey", linewidth = 4) +
   geom_point(aes(x = GAPG, y = team_name), color = "black", size = 8) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.1))) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.15))) +
   labs(x = "", y = "",
        title = "") +
   theme_minimal() +
@@ -241,22 +237,22 @@ ggplot(kpl_merge_bar_24_25_gapg) +
         plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
         panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_ga_pg.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_6_naija_pl_analysis/images/22_23/naija_pl_analysis_22_23_ga_pg.png", width = 12, height = 12, dpi = 300)
 
 
 # 6) Plot of Goal Difference per Game
 
-kpl_merge_bar_24_25_gdpg <- kpl_merge_24_25 |>
+naija_pl_merge_bar_22_23_gdpg <- naija_pl_merge_22_23 |>
   mutate(GDPG = round(GD/GP, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column
   select(team_name, GDPG) 
 
-ggplot(kpl_merge_bar_24_25_gdpg) +
+ggplot(naija_pl_merge_bar_22_23_gdpg) +
   geom_segment(aes(x = 0, xend = GDPG, y = team_name, yend = team_name), 
                color = "lightgreen", linewidth = 4) +
   geom_point(aes(x = GDPG, y = team_name), color = "green4", size = 8) +
-  scale_x_continuous() +
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.1))) +
   labs(x = "", y = "",
        title = "") +
   theme_minimal() +
@@ -275,20 +271,20 @@ ggplot(kpl_merge_bar_24_25_gdpg) +
         plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
         panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_gd_pg.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_6_naija_pl_analysis/images/22_23/naija_pl_analysis_22_23_gd_pg.png", width = 12, height = 12, dpi = 300)
 
 # 7) Scatterplot of GF vs GA
 
-kpl_merge_bar_24_25_gf_ga <- kpl_merge_24_25 |>
+naija_pl_merge_bar_22_23_gf_ga <- naija_pl_merge_22_23 |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column       
   select(team_name, F, A)
 
 # Thresholds
-against_thresh <- median(kpl_merge_bar_24_25_gf_ga$A)
-for_thresh <- median(kpl_merge_bar_24_25_gf_ga$F)
+against_thresh <- median(naija_pl_merge_bar_22_23_gf_ga$A)
+for_thresh <- median(naija_pl_merge_bar_22_23_gf_ga$F)
 
-ggplot(kpl_merge_bar_24_25_gf_ga, aes(x = A, y = F)) +
+ggplot(naija_pl_merge_bar_22_23_gf_ga, aes(x = A, y = F)) +
   geom_point(color = "brown4", size = 6) +
   geom_text_repel(aes(label = team_name), vjust = -0.5, size = 8) +
   labs(x = "Goals Against", y = "Goals For", title = "") +
@@ -315,29 +311,30 @@ ggplot(kpl_merge_bar_24_25_gf_ga, aes(x = A, y = F)) +
         plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
         panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_gf_ga.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_6_naija_pl_analysis/images/22_23/naija_pl_analysis_22_23_gf_ga.png", width = 12, height = 12, dpi = 300)
 
 
 # 8) Scatterplot of PPG vs GD
 
-kpl_merge_bar_24_25_ppg_gd <- kpl_merge_24_25 |>
+naija_pl_merge_bar_22_23_ppg_gd <- naija_pl_merge_22_23 |>
   mutate(PPG = round(P/F, 3)) |>
   mutate(team_name = fct_reorder(team_name, GD)) |> # Order by tie-breaker
   mutate(team_name = fct_reorder(team_name, P)) |> # Order by main column       
   select(team_name, PPG, GD)
 
 # Thresholds
-goal_diff_thresh <- median(kpl_merge_bar_24_25_ppg_gd$GD)
-ppg_thresh <- median(kpl_merge_bar_24_25_ppg_gd$PPG)
+goal_diff_thresh <- median(naija_pl_merge_bar_22_23_ppg_gd$GD)
+ppg_thresh <- median(naija_pl_merge_bar_22_23_ppg_gd$PPG)
 
-ggplot(kpl_merge_bar_24_25_ppg_gd, aes(x = GD, y = PPG)) +
+ggplot(naija_pl_merge_bar_22_23_ppg_gd, aes(x = GD, y = PPG)) +
   geom_point(color = "brown4", size = 6) +
   geom_text_repel(aes(label = team_name), vjust = -0.5, size = 8) +
-  labs(x = "Goal Difference", y = "Points per Goal", title = "") +
+  labs(x = "Goal Difference", y = "Points Per Goal", title = "") +
   annotate("rect", xmin = goal_diff_thresh, xmax = Inf,
            ymin = ppg_thresh, ymax = Inf, alpha = 0.2, fill = "pink") +
   geom_hline(yintercept = ppg_thresh, linetype = "dashed", color = "gray") +
   geom_vline(xintercept = goal_diff_thresh, linetype = "dashed", color = "gray") +
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.1))) +
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
@@ -357,13 +354,14 @@ ggplot(kpl_merge_bar_24_25_ppg_gd, aes(x = GD, y = PPG)) +
         plot.background = element_rect(fill = "bisque1", color = "bisque1"), 
         panel.background = element_rect(fill = "bisque1", color = "bisque1"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_ppg_gd.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_6_naija_pl_analysis/images/22_23/naija_pl_analysis_22_23_ppg_gd.png", width = 12, height = 12, dpi = 300)
 
-# 9) Radar Chart
+
+# 9) Radar Chart - Sample teams to plot
 
 # a) Non-Percentage metrics
 
-kpl_merge_24_25_non_perc <- kpl_merge_24_25 |>
+naija_pl_merge_22_23_non_perc <- naija_pl_merge_22_23 |>
   mutate(
     PPG = P / GP,
     GPG = F / GP,
@@ -375,7 +373,7 @@ kpl_merge_24_25_non_perc <- kpl_merge_24_25 |>
 
 # b) Percentage metrics
 
-kpl_merge_24_25_perc <- kpl_merge_24_25 |>
+naija_pl_merge_22_23_perc <- naija_pl_merge_22_23 |>
   mutate(
     WinPerc = (W / GP) * 100,
     DrawPerc = (D / GP) * 100,
@@ -387,41 +385,42 @@ kpl_merge_24_25_perc <- kpl_merge_24_25 |>
 
 # c) Table with selected metrics
 
-kpl_merge_24_25_non_perc_radar <- kpl_merge_24_25_non_perc |>
+naija_pl_merge_22_23_non_perc_radar <- naija_pl_merge_22_23_non_perc |>
   select(team_name, PPG, GPG, GAPG, GF2GA, GDPG, GD2P) 
 
-kpl_merge_24_25_perc_radar <- kpl_merge_24_25_perc |>
+naija_pl_merge_22_23_perc_radar <- naija_pl_merge_22_23_perc |>
   select(team_name, WinPerc, DrawPerc, LossPerc, PointsPerc, GoalsSharePerc, GoalsAgainstPerc) 
 
 # d) Radar Plots
 
+
 # Top 3 Teams (Percent Metrics)
 
-kpl_merge_24_25_perc_radar_top_3 <- kpl_merge_24_25_perc_radar |>
-  filter(team_name == c("Police", "Gor Mahia", "Kakamega Homeboyz"))
+naija_pl_merge_22_23_perc_radar_top_3 <- naija_pl_merge_22_23_perc_radar |>
+  filter(team_name %in% c("Remo Stars", "Rivers United FC", "Abia Warriors"))
 
-my_top_colors <- c("Police" = "#BE8125", 
-                   "Gor Mahia" = "#2FBE25", 
-                   "Kakamega Homeboyz" = "#BE25AB")
+my_top_colors <- c("Remo Stars" = "#BE8125", 
+                   "Rivers United FC" = "#2FBE25", 
+                   "Abia Warriors" = "#BE25AB")
 
-perc_radar_top_3 <- ggradar(kpl_merge_24_25_perc_radar_top_3,
-                                grid.min = 0,
-                                grid.mid = 50,
-                                grid.max = 100,
-                                values.radar = c("", "", ""),
-                                axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
-                                                "Points Earned/Total\nPossible Points (%)", 
-                                                "Goals For/\nTotal Goals (%)", 
-                                                "Goals Against/\nTotal Goals (%)"),
-                                axis.label.size = 8,
-                                fill = TRUE, 
-                                fill.alpha = 0.2,
-                                group.line.width = 1.2,
-                                group.point.size = 3,
-                                group.colours = my_top_colors,
-                                legend.position = "bottom",
-                                legend.text.size = 24,
-                                plot.title = "") +
+perc_radar_top_3 <- ggradar(naija_pl_merge_22_23_perc_radar_top_3,
+                            grid.min = 0,
+                            grid.mid = 50,
+                            grid.max = 100,
+                            values.radar = c("", "", ""),
+                            axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
+                                            "Points Earned/Total\nPossible Points (%)", 
+                                            "Goals For/\nTotal Goals (%)", 
+                                            "Goals Against/\nTotal Goals (%)"),
+                            axis.label.size = 8,
+                            fill = TRUE, 
+                            fill.alpha = 0.2,
+                            group.line.width = 1.2,
+                            group.point.size = 3,
+                            group.colours = my_top_colors,
+                            legend.position = "bottom",
+                            legend.text.size = 24,
+                            plot.title = "") +
   theme(
     plot.margin = unit(c(0, 0, 0, 0), "cm"),
     text = element_text(size = 32),
@@ -446,36 +445,36 @@ perc_radar_top_3 <- perc_radar_top_3 +
 
 perc_radar_top_3
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_perc_radar_top_3.png", height = 12, width = 12, dpi = 300)
+ggsave("sub_pro_6_naija_pl_analysis/images/22_23/naija_pl_analysis_22_23_perc_radar_top_3.png", height = 12, width = 12, dpi = 300)
 
 
 # Bottom 3 Teams (Percent Metrics)
 
-kpl_merge_24_25_perc_radar_bottom_3 <- kpl_merge_24_25_perc_radar |>
-  filter(team_name == c("Posta Rangers", "Talanta", "Nairobi City Stars"))
+naija_pl_merge_22_23_perc_radar_bottom_3 <- naija_pl_merge_22_23_perc_radar |>
+  filter(team_name %in% c("Akwa United", "Sunshine Stars", "Lobi Stars"))
 
-my_bottom_colors <- c("Posta Rangers" = "#BE8125", 
-                      "Talanta" = "#2FBE25", 
-                      "Nairobi City Stars" = "#BE25AB")
+my_bottom_colors <- c("Akwa United" = "#BE8125", 
+                      "Sunshine Stars" = "#2FBE25", 
+                      "Lobi Stars" = "#BE25AB")
 
-perc_radar_bottom_3 <- ggradar(kpl_merge_24_25_perc_radar_bottom_3,
-                            grid.min = 0,
-                            grid.mid = 50,
-                            grid.max = 100,
-                            values.radar = c("", "", ""),
-                            axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
-                                            "Points Earned/Total\nPossible Points (%)", 
-                                            "Goals For/\nTotal Goals (%)", 
-                                            "Goals Against/\nTotal Goals (%)"),
-                            axis.label.size = 8,
-                            fill = TRUE, 
-                            fill.alpha = 0.2,
-                            group.line.width = 1.2,
-                            group.point.size = 3,
-                            group.colours = my_bottom_colors,
-                            legend.position = "bottom",
-                            legend.text.size = 24,
-                            plot.title = "") +
+perc_radar_bottom_3 <- ggradar(naija_pl_merge_22_23_perc_radar_bottom_3,
+                               grid.min = 0,
+                               grid.mid = 50,
+                               grid.max = 100,
+                               values.radar = c("", "", ""),
+                               axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
+                                               "Points Earned/Total\nPossible Points (%)", 
+                                               "Goals For/\nTotal Goals (%)", 
+                                               "Goals Against/\nTotal Goals (%)"),
+                               axis.label.size = 8,
+                               fill = TRUE, 
+                               fill.alpha = 0.2,
+                               group.line.width = 1.2,
+                               group.point.size = 3,
+                               group.colours = my_bottom_colors,
+                               legend.position = "bottom",
+                               legend.text.size = 24,
+                               plot.title = "") +
   theme(
     plot.margin = unit(c(0, 0, 0, 0), "cm"),
     text = element_text(size = 32),
@@ -500,37 +499,37 @@ perc_radar_bottom_3 <- perc_radar_bottom_3 +
 
 perc_radar_bottom_3
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_perc_radar_bottom_3.png", height = 12, width = 12, dpi = 300)
+ggsave("sub_pro_6_naija_pl_analysis/images/22_23/naija_pl_analysis_22_23_perc_radar_bottom_3.png", height = 12, width = 12, dpi = 300)
 
 
-# Bottom 3 Teams (Percent Metrics)
+# Top Bottom 2 Teams (Percent Metrics)
 
-kpl_merge_24_25_perc_radar_top_bottom_2 <- kpl_merge_24_25_perc_radar |>
-  filter(team_name %in% c("Police", "Gor Mahia", "Talanta", "Nairobi City Stars"))
+naija_pl_merge_22_23_perc_radar_top_bottom_2 <- naija_pl_merge_22_23_perc_radar |>
+  filter(team_name %in% c("Remo Stars", "Rivers United FC", "Sunshine Stars", "Lobi Stars"))
 
-my_top_bottom_colors <- c("Police" = "#000080", 
-                          "Gor Mahia" = "#2FBE25", 
-                          "Talanta" = "#BE8125", 
-                          "Nairobi City Stars" = "#BE25AB")
+my_top_bottom_colors <- c("Remo Stars" = "#000080", 
+                          "Rivers United FC" = "#2FBE25", 
+                          "Sunshine Stars" = "#BE8125", 
+                          "Lobi Stars" = "#BE25AB")
 
-perc_radar_top_bottom_2 <- ggradar(kpl_merge_24_25_perc_radar_top_bottom_2,
-                               grid.min = 0,
-                               grid.mid = 50,
-                               grid.max = 100,
-                               values.radar = c("", "", ""),
-                               axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
-                                               "Points Earned/Total\nPossible Points (%)", 
-                                               "Goals For/\nTotal Goals (%)", 
-                                               "Goals Against/\nTotal Goals (%)"),
-                               axis.label.size = 8,
-                               fill = TRUE, 
-                               fill.alpha = 0.2,
-                               group.line.width = 1.2,
-                               group.point.size = 3,
-                               group.colours = my_top_bottom_colors,
-                               legend.position = "bottom",
-                               legend.text.size = 24,
-                               plot.title = "") +
+perc_radar_top_bottom_2 <- ggradar(naija_pl_merge_22_23_perc_radar_top_bottom_2,
+                                   grid.min = 0,
+                                   grid.mid = 50,
+                                   grid.max = 100,
+                                   values.radar = c("", "", ""),
+                                   axis.labels = c("Wins (%)", "Draws (%)", "Losses (%)", 
+                                                   "Points Earned/Total\nPossible Points (%)", 
+                                                   "Goals For/\nTotal Goals (%)", 
+                                                   "Goals Against/\nTotal Goals (%)"),
+                                   axis.label.size = 8,
+                                   fill = TRUE, 
+                                   fill.alpha = 0.2,
+                                   group.line.width = 1.2,
+                                   group.point.size = 3,
+                                   group.colours = my_top_bottom_colors,
+                                   legend.position = "bottom",
+                                   legend.text.size = 24,
+                                   plot.title = "") +
   theme(
     plot.margin = unit(c(0, 0, 0, 0), "cm"),
     text = element_text(size = 32),
@@ -556,4 +555,4 @@ perc_radar_top_bottom_2 <- perc_radar_top_bottom_2 +
 
 perc_radar_top_bottom_2
 
-#ggsave("sub_pro_1_kpl_analysis/images/24_25/kpl_analysis_24_25_perc_radar_top_bottom_2.png", height = 12, width = 12, dpi = 300)
+ggsave("sub_pro_6_naija_pl_analysis/images/22_23/naija_pl_analysis_22_23_perc_radar_top_bottom_2.png", height = 12, width = 12, dpi = 300)

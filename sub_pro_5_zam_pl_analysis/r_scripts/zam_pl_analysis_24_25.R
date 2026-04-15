@@ -14,7 +14,7 @@ library(ggradar)
 
 # Load the required data
 
-# page_24_25 <- read_html("https://www.espn.com/soccer/standings/_/league/zam.1/season/2024")
+# page_24_25 <- read_html("https://www.espn.com/soccer/standings/_/league/ZAM.1/season/2024")
 # tables_24_25 <- html_table(page_24_25)
 # zam_pl_1_24_25 <- tables_24_25[[1]]
 # zam_pl_2_24_25 <- tables_24_25[[2]]

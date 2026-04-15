@@ -104,7 +104,7 @@ kpl_merge_bar_22_23_pt_gd_long %>%
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_pt_gd.png", width = 12, height = 12, dpi = 300)
+#ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_pt_gd.png", width = 12, height = 12, dpi = 300)
 
 
 # 2) Plot of Wins and Losses in a Lollipop Chart
@@ -138,7 +138,7 @@ ggplot(kpl_merge_lollipop_22_23_w_l) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_w_l.png", width = 12, height = 12, dpi = 300)
+#ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_w_l.png", width = 12, height = 12, dpi = 300)
 
 # 3) Plot of Points per Goal
 
@@ -169,7 +169,7 @@ ggplot(kpl_merge_bar_22_23_ppg) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_ppg.png", width = 12, height = 12, dpi = 300)
+#ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_ppg.png", width = 12, height = 12, dpi = 300)
 
 # 4) Plot of Goals per Game
 
@@ -200,7 +200,7 @@ ggplot(kpl_merge_bar_22_23_gpg) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_gpg.png", width = 12, height = 12, dpi = 300)
+#ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_gpg.png", width = 12, height = 12, dpi = 300)
 
 # 5) Plot of Goals Against per Game
 
@@ -237,7 +237,7 @@ ggplot(kpl_merge_bar_22_23_gapg) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_ga_pg.png", width = 12, height = 12, dpi = 300)
+#ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_ga_pg.png", width = 12, height = 12, dpi = 300)
 
 
 # 6) Plot of Goal Difference per Game
@@ -275,7 +275,7 @@ ggplot(kpl_merge_bar_22_23_gdpg) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_gd_pg.png", width = 12, height = 12, dpi = 300)
+#ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_gd_pg.png", width = 12, height = 12, dpi = 300)
 
 # 7) Scatterplot of GF vs GA
 
@@ -319,7 +319,7 @@ ggplot(kpl_merge_bar_22_23_gf_ga, aes(x = A, y = F)) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_gf_ga.png", width = 12, height = 12, dpi = 300)
+#ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_gf_ga.png", width = 12, height = 12, dpi = 300)
 
 
 # 8) Scatterplot of PPG vs GD
@@ -359,7 +359,7 @@ ggplot(kpl_merge_bar_22_23_ppg_gd, aes(x = GD, y = PPG)) +
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_ppg_gd.png", width = 12, height = 12, dpi = 300)
+#ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_ppg_gd.png", width = 12, height = 12, dpi = 300)
 
 
 # 9) Radar Chart - Sample teams to plot
@@ -449,7 +449,7 @@ perc_radar_top_3 <- perc_radar_top_3 +
 
 perc_radar_top_3
 
-ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_perc_radar_top_3.png", height = 12, width = 12, dpi = 300)
+#ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_perc_radar_top_3.png", height = 12, width = 12, dpi = 300)
 
 # Bottom 3 Teams (Percent Metrics)
 
@@ -502,7 +502,7 @@ perc_radar_bottom_3 <- perc_radar_bottom_3 +
 
 perc_radar_bottom_3
 
-ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_perc_radar_bottom_3.png", height = 12, width = 12, dpi = 300)
+#ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_perc_radar_bottom_3.png", height = 12, width = 12, dpi = 300)
 
 
 # Top Bottom 2 Teams (Percent Metrics)
@@ -558,4 +558,4 @@ perc_radar_top_bottom_2 <- perc_radar_top_bottom_2 +
 
 perc_radar_top_bottom_2
 
-ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_perc_radar_top_bottom_2.png", height = 12, width = 12, dpi = 300)
+#ggsave("sub_pro_1_kpl_analysis/images/22_23/kpl_analysis_22_23_perc_radar_top_bottom_2.png", height = 12, width = 12, dpi = 300)

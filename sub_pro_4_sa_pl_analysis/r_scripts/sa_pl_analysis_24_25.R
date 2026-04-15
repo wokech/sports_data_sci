@@ -13,7 +13,7 @@ library(RColorBrewer)
 
 # Load the required data
 
-# page_24_25 <- read_html("https://www.espn.com/soccer/standings/_/league/rsa.1/season/2024")
+# page_24_25 <- read_html("https://www.espn.com/soccer/standings/_/league/RSA.1/seasontype/1/season/2024")
 # tables_24_25 <- html_table(page_24_25)
 # sa_pl_1_24_25 <- tables_24_25[[1]]
 # sa_pl_2_24_25 <- tables_24_25[[2]]
