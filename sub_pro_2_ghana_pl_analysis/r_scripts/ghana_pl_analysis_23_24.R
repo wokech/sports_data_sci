@@ -79,7 +79,7 @@ ghana_pl_merge_bar_23_24_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -389,11 +389,11 @@ ghana_pl_merge_23_24_perc_radar <- ghana_pl_merge_23_24_perc |>
 # Top 3 Teams (Percent Metrics)
 
 ghana_pl_merge_23_24_perc_radar_top_3 <- ghana_pl_merge_23_24_perc_radar |>
-  filter(team_name == c("Bibiani Gold Stars", "Heart of Lions", "Asante Kotoko"))
+  filter(team_name == c("Samartex", "Accra Lions", "Berekum Chelsea"))
 
-my_top_colors <- c("Bibiani Gold Stars" = "#BE8125", 
-                   "Heart of Lions" = "#2FBE25", 
-                   "Asante Kotoko" = "#BE25AB")
+my_top_colors <- c("Samartex" = "#BE8125", 
+                   "Accra Lions" = "#2FBE25", 
+                   "Berekum Chelsea" = "#BE25AB")
 
 perc_radar_top_3 <- ggradar(ghana_pl_merge_23_24_perc_radar_top_3,
                             grid.min = 0,
@@ -443,11 +443,11 @@ ggsave("sub_pro_2_ghana_pl_analysis/images/23_24/ghana_pl_analysis_23_24_perc_ra
 # Bottom 3 Teams (Percent Metrics)
 
 ghana_pl_merge_23_24_perc_radar_bottom_3 <- ghana_pl_merge_23_24_perc_radar |>
-  filter(team_name == c("Accra Lions", "Legon Cities", "Nsoatreman"))
+  filter(team_name == c("Great Olympics", "Bofoakwe Tano", "RTU"))
 
-my_bottom_colors <- c("Accra Lions" = "#BE8125", 
-                      "Legon Cities" = "#2FBE25", 
-                      "Nsoatreman" = "#BE25AB")
+my_bottom_colors <- c("Great Olympics" = "#BE8125", 
+                      "Bofoakwe Tano" = "#2FBE25", 
+                      "RTU" = "#BE25AB")
 
 perc_radar_bottom_3 <- ggradar(ghana_pl_merge_23_24_perc_radar_bottom_3,
                                grid.min = 0,
@@ -497,12 +497,12 @@ ggsave("sub_pro_2_ghana_pl_analysis/images/23_24/ghana_pl_analysis_23_24_perc_ra
 # Bottom 3 Teams (Percent Metrics)
 
 ghana_pl_merge_23_24_perc_radar_top_bottom_2 <- ghana_pl_merge_23_24_perc_radar |>
-  filter(team_name %in% c("Bibiani Gold Stars", "Heart of Lions", "Legon Cities", "Nsoatreman"))
+  filter(team_name %in% c("Samartex", "Accra Lions", "Bofoakwe Tano", "RTU"))
 
-my_top_bottom_colors <- c("Bibiani Gold Stars" = "#000080", 
-                          "Heart of Lions" = "#2FBE25", 
-                          "Legon Cities" = "#BE8125", 
-                          "Nsoatreman" = "#BE25AB")
+my_top_bottom_colors <- c("Samartex" = "#000080", 
+                          "Accra Lions" = "#2FBE25", 
+                          "Bofoakwe Tano" = "#BE8125", 
+                          "RTU" = "#BE25AB")
 
 perc_radar_top_bottom_2 <- ggradar(ghana_pl_merge_23_24_perc_radar_top_bottom_2,
                                    grid.min = 0,

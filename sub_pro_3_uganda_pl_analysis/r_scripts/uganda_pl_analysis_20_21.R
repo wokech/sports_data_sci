@@ -88,7 +88,7 @@ uganda_pl_merge_bar_20_21_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -396,11 +396,11 @@ uganda_pl_merge_20_21_perc_radar <- uganda_pl_merge_20_21_perc |>
 # Top 3 Teams (Percent Metrics)
 
 uganda_pl_merge_20_21_perc_radar_top_3 <- uganda_pl_merge_20_21_perc_radar |>
-  filter(team_name == c("Vipers", "NEC FC", "Bul FC"))
+  filter(team_name == c("Express", "URA", "Vipers"))
 
-my_top_colors <- c("Vipers" = "#BE8125", 
-                   "NEC FC" = "#2FBE25", 
-                   "Bul FC" = "#BE25AB")
+my_top_colors <- c("Express" = "#BE8125", 
+                   "URA" = "#2FBE25", 
+                   "Vipers" = "#BE25AB")
 
 perc_radar_top_3 <- ggradar(uganda_pl_merge_20_21_perc_radar_top_3,
                             grid.min = 0,
@@ -450,11 +450,11 @@ ggsave("sub_pro_3_uganda_pl_analysis/images/20_21/uganda_pl_analysis_20_21_perc_
 # Bottom 3 Teams (Percent Metrics)
 
 uganda_pl_merge_20_21_perc_radar_bottom_3 <- uganda_pl_merge_20_21_perc_radar |>
-  filter(team_name %in% c("Bright Stars", "Wakiso Giants", "Mbale Heroes"))
+  filter(team_name %in% c("Kyetume", "MYDA FC", "Kitara"))
 
-my_bottom_colors <- c("Bright Stars" = "#BE8125", 
-                      "Wakiso Giants" = "#2FBE25", 
-                      "Mbale Heroes" = "#BE25AB")
+my_bottom_colors <- c("Kyetume" = "#BE8125", 
+                      "MYDA FC" = "#2FBE25", 
+                      "Kitara" = "#BE25AB")
 
 perc_radar_bottom_3 <- ggradar(uganda_pl_merge_20_21_perc_radar_bottom_3,
                                grid.min = 0,
@@ -504,12 +504,12 @@ ggsave("sub_pro_3_uganda_pl_analysis/images/20_21/uganda_pl_analysis_20_21_perc_
 # Bottom 3 Teams (Percent Metrics)
 
 uganda_pl_merge_20_21_perc_radar_top_bottom_2 <- uganda_pl_merge_20_21_perc_radar |>
-  filter(team_name %in% c("Vipers", "NEC FC", "Wakiso Giants", "Mbale Heroes"))
+  filter(team_name %in% c("Express", "URA", "MYDA FC", "Kitara"))
 
-my_top_bottom_colors <- c("Vipers" = "#000080", 
-                          "NEC FC" = "#2FBE25", 
-                          "Wakiso Giants" = "#BE8125", 
-                          "Mbale Heroes" = "#BE25AB")
+my_top_bottom_colors <- c("Express" = "#000080", 
+                          "URA" = "#2FBE25", 
+                          "MYDA FC" = "#BE8125", 
+                          "Kitara" = "#BE25AB")
 
 perc_radar_top_bottom_2 <- ggradar(uganda_pl_merge_20_21_perc_radar_top_bottom_2,
                                    grid.min = 0,

@@ -90,7 +90,7 @@ sa_pl_merge_bar_22_23_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -294,7 +294,7 @@ ggplot(sa_pl_merge_bar_22_23_gf_ga, aes(x = A, y = F)) +
            ymin = for_thresh, ymax = Inf, alpha = 0.2, fill = "pink") +
   geom_hline(yintercept = for_thresh, linetype = "dashed", color = "gray") +
   geom_vline(xintercept = against_thresh, linetype = "dashed", color = "gray") +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.05))) +
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
@@ -399,11 +399,11 @@ sa_pl_merge_22_23_perc_radar <- sa_pl_merge_22_23_perc |>
 # Top 3 Teams (Percent Metrics)
 
 sa_pl_merge_22_23_perc_radar_top_3 <- sa_pl_merge_22_23_perc_radar |>
-  filter(team_name == c("Mamelodi Sundowns", "Orlando Pirates", "Stellenbosch"))
+  filter(team_name == c("Mamelodi Sundowns", "Orlando Pirates", "SuperSport United"))
 
 my_top_colors <- c("Mamelodi Sundowns" = "#BE8125", 
                    "Orlando Pirates" = "#2FBE25", 
-                   "Stellenbosch" = "#BE25AB")
+                   "SuperSport United" = "#BE25AB")
 
 perc_radar_top_3 <- ggradar(sa_pl_merge_22_23_perc_radar_top_3,
                             grid.min = 0,
@@ -453,11 +453,11 @@ ggsave("sub_pro_4_sa_pl_analysis/images/22_23/sa_pl_analysis_22_23_perc_radar_to
 # Bottom 3 Teams (Percent Metrics)
 
 sa_pl_merge_22_23_perc_radar_bottom_3 <- sa_pl_merge_22_23_perc_radar |>
-  filter(team_name == c("Magesi FC", "SuperSport United", "Cape Town City"))
+  filter(team_name == c("Chippa United", "Maritzburg United", "Marumo Gallants"))
 
-my_bottom_colors <- c("Magesi FC" = "#BE8125", 
-                      "SuperSport United" = "#2FBE25", 
-                      "Cape Town City" = "#BE25AB")
+my_bottom_colors <- c("Chippa United" = "#BE8125", 
+                      "Maritzburg United" = "#2FBE25", 
+                      "Marumo Gallants" = "#BE25AB")
 
 perc_radar_bottom_3 <- ggradar(sa_pl_merge_22_23_perc_radar_bottom_3,
                                grid.min = 0,

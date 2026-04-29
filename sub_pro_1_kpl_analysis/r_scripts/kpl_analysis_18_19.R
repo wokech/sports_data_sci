@@ -95,7 +95,7 @@ kpl_merge_bar_18_19_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),

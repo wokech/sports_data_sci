@@ -79,7 +79,7 @@ uganda_pl_merge_bar_23_24_pt_gd_long %>%
             hjust = -0.05, vjust = -0.25, size = 7, 
             inherit.aes = FALSE) +
   scale_fill_manual(values = c("P" = "purple3", "GD" = "salmon1")) +
-  scale_y_continuous(expand = expansion(mult = c(0.05, 0.15)), 
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.2)), 
                      breaks = seq(-60, 80, by = 10)) +
   labs(x = NULL, y = "Value", fill = "Metric") +
   coord_flip() + 
@@ -88,7 +88,7 @@ uganda_pl_merge_bar_23_24_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -218,7 +218,7 @@ ggplot(uganda_pl_merge_bar_23_24_gapg) +
   geom_segment(aes(x = 0, xend = GAPG, y = team_name, yend = team_name), 
                color = "grey", linewidth = 4) +
   geom_point(aes(x = GAPG, y = team_name), color = "black", size = 8) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.15))) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.2))) +
   labs(x = "", y = "",
        title = "") +
   theme_minimal() +
@@ -396,10 +396,10 @@ uganda_pl_merge_23_24_perc_radar <- uganda_pl_merge_23_24_perc |>
 # Top 3 Teams (Percent Metrics)
 
 uganda_pl_merge_23_24_perc_radar_top_3 <- uganda_pl_merge_23_24_perc_radar |>
-  filter(team_name == c("Vipers", "NEC FC", "Bul FC"))
+  filter(team_name %in% c("SC Villa", "Vipers", "Bul FC"))
 
-my_top_colors <- c("Vipers" = "#BE8125", 
-                   "NEC FC" = "#2FBE25", 
+my_top_colors <- c("SC Villa" = "#BE8125", 
+                   "Vipers" = "#2FBE25", 
                    "Bul FC" = "#BE25AB")
 
 perc_radar_top_3 <- ggradar(uganda_pl_merge_23_24_perc_radar_top_3,
@@ -450,11 +450,11 @@ ggsave("sub_pro_3_uganda_pl_analysis/images/23_24/uganda_pl_analysis_23_24_perc_
 # Bottom 3 Teams (Percent Metrics)
 
 uganda_pl_merge_23_24_perc_radar_bottom_3 <- uganda_pl_merge_23_24_perc_radar |>
-  filter(team_name %in% c("Bright Stars", "Wakiso Giants", "Mbale Heroes"))
+  filter(team_name %in% c("Busoga United", "Entebbe UPPC", "Arua Hill SC"))
 
-my_bottom_colors <- c("Bright Stars" = "#BE8125", 
-                      "Wakiso Giants" = "#2FBE25", 
-                      "Mbale Heroes" = "#BE25AB")
+my_bottom_colors <- c("Busoga United" = "#BE8125", 
+                      "Entebbe UPPC" = "#2FBE25", 
+                      "Arua Hill SC" = "#BE25AB")
 
 perc_radar_bottom_3 <- ggradar(uganda_pl_merge_23_24_perc_radar_bottom_3,
                                grid.min = 0,
@@ -504,12 +504,12 @@ ggsave("sub_pro_3_uganda_pl_analysis/images/23_24/uganda_pl_analysis_23_24_perc_
 # Bottom 3 Teams (Percent Metrics)
 
 uganda_pl_merge_23_24_perc_radar_top_bottom_2 <- uganda_pl_merge_23_24_perc_radar |>
-  filter(team_name %in% c("Vipers", "NEC FC", "Wakiso Giants", "Mbale Heroes"))
+  filter(team_name %in% c("SC Villa", "Vipers", "Entebbe UPPC", "Arua Hill SC"))
 
-my_top_bottom_colors <- c("Vipers" = "#000080", 
-                          "NEC FC" = "#2FBE25", 
-                          "Wakiso Giants" = "#BE8125", 
-                          "Mbale Heroes" = "#BE25AB")
+my_top_bottom_colors <- c("SC Villa" = "#000080", 
+                          "Vipers" = "#2FBE25", 
+                          "Entebbe UPPC" = "#BE8125", 
+                          "Arua Hill SC" = "#BE25AB")
 
 perc_radar_top_bottom_2 <- ggradar(uganda_pl_merge_23_24_perc_radar_top_bottom_2,
                                    grid.min = 0,

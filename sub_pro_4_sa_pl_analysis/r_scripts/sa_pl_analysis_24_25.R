@@ -87,7 +87,7 @@ sa_pl_merge_bar_24_25_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -291,7 +291,7 @@ ggplot(sa_pl_merge_bar_24_25_gf_ga, aes(x = A, y = F)) +
            ymin = for_thresh, ymax = Inf, alpha = 0.2, fill = "pink") +
   geom_hline(yintercept = for_thresh, linetype = "dashed", color = "gray") +
   geom_vline(xintercept = against_thresh, linetype = "dashed", color = "gray") +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.05))) +
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),

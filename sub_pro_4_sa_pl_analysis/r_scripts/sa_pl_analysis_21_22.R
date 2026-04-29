@@ -13,33 +13,33 @@ library(RColorBrewer)
 
 # Load the required data
 
-page_21_22 <- read_html("https://www.espn.com/soccer/standings/_/league/RSA.1/seasontype/1/season/2021")
-tables_21_22 <- html_table(page_21_22)
-sa_pl_1_21_22 <- tables_21_22[[1]]
-sa_pl_2_21_22 <- tables_21_22[[2]]
-
-sa_pl_1_21_22 <- sa_pl_1_21_22 |>
-  rename(Club = `2021-22`)
-
-sa_pl_1_21_22 <- sa_pl_1_21_22 |>
-  mutate(
-    matches = str_match(Club, "^([0-9]+)([A-Z]{3})(.*)$"),
-    code_number = matches[, 2],
-    code_letters = matches[, 3],
-    team_name = str_trim(matches[, 4])
-  ) |>
-  select(-matches)
-
-sa_pl_merge_21_22 <- bind_cols(sa_pl_1_21_22, sa_pl_2_21_22) |>
-  mutate(team_name = replace(team_name, team_name == "CCape Town City", "Cape Town City")) |>
-  mutate(team_name = replace(team_name, team_name == "OMoroka Swallows", "Moroka Swallows"))
-
-sa_pl_merge_21_22 <- sa_pl_merge_21_22 |>
-  select(-Club)
+# page_21_22 <- read_html("https://www.espn.com/soccer/standings/_/league/RSA.1/seasontype/1/season/2021")
+# tables_21_22 <- html_table(page_21_22)
+# sa_pl_1_21_22 <- tables_21_22[[1]]
+# sa_pl_2_21_22 <- tables_21_22[[2]]
+# 
+# sa_pl_1_21_22 <- sa_pl_1_21_22 |>
+#   rename(Club = `2021-22`)
+# 
+# sa_pl_1_21_22 <- sa_pl_1_21_22 |>
+#   mutate(
+#     matches = str_match(Club, "^([0-9]+)([A-Z]{3})(.*)$"),
+#     code_number = matches[, 2],
+#     code_letters = matches[, 3],
+#     team_name = str_trim(matches[, 4])
+#   ) |>
+#   select(-matches)
+# 
+# sa_pl_merge_21_22 <- bind_cols(sa_pl_1_21_22, sa_pl_2_21_22) |>
+#   mutate(team_name = replace(team_name, team_name == "CCape Town City", "Cape Town City")) |>
+#   mutate(team_name = replace(team_name, team_name == "OMoroka Swallows", "Moroka Swallows"))
+# 
+# sa_pl_merge_21_22 <- sa_pl_merge_21_22 |>
+#   select(-Club)
 
 # Save data as csv in datasets
-write_csv(sa_pl_merge_21_22, here::here("sub_pro_4_sa_pl_analysis",
-                                     "datasets", "sa_pl_merge_21_22.csv"))
+# write_csv(sa_pl_merge_21_22, here::here("sub_pro_4_sa_pl_analysis",
+#                                      "datasets", "sa_pl_merge_21_22.csv"))
 
 
 # Read in data
@@ -89,7 +89,7 @@ sa_pl_merge_bar_21_22_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -293,7 +293,7 @@ ggplot(sa_pl_merge_bar_21_22_gf_ga, aes(x = A, y = F)) +
            ymin = for_thresh, ymax = Inf, alpha = 0.2, fill = "pink") +
   geom_hline(yintercept = for_thresh, linetype = "dashed", color = "gray") +
   geom_vline(xintercept = against_thresh, linetype = "dashed", color = "gray") +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.05))) +
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
@@ -398,10 +398,10 @@ sa_pl_merge_21_22_perc_radar <- sa_pl_merge_21_22_perc |>
 # Top 3 Teams (Percent Metrics)
 
 sa_pl_merge_21_22_perc_radar_top_3 <- sa_pl_merge_21_22_perc_radar |>
-  filter(team_name == c("Mamelodi Sundowns", "Orlando Pirates", "Stellenbosch"))
+  filter(team_name %in% c("Mamelodi Sundowns", "Cape Town City", "Stellenbosch"))
 
 my_top_colors <- c("Mamelodi Sundowns" = "#BE8125", 
-                   "Orlando Pirates" = "#2FBE25", 
+                   "Cape Town City" = "#2FBE25", 
                    "Stellenbosch" = "#BE25AB")
 
 perc_radar_top_3 <- ggradar(sa_pl_merge_21_22_perc_radar_top_3,
@@ -452,11 +452,11 @@ ggsave("sub_pro_4_sa_pl_analysis/images/21_22/sa_pl_analysis_21_22_perc_radar_to
 # Bottom 3 Teams (Percent Metrics)
 
 sa_pl_merge_21_22_perc_radar_bottom_3 <- sa_pl_merge_21_22_perc_radar |>
-  filter(team_name == c("Magesi FC", "SuperSport United", "Cape Town City"))
+  filter(team_name == c("Chippa United", "Moroka Swallows", "Baroka FC"))
 
-my_bottom_colors <- c("Magesi FC" = "#BE8125", 
-                      "SuperSport United" = "#2FBE25", 
-                      "Cape Town City" = "#BE25AB")
+my_bottom_colors <- c("Chippa United" = "#BE8125", 
+                      "Moroka Swallows" = "#2FBE25", 
+                      "Baroka FC" = "#BE25AB")
 
 perc_radar_bottom_3 <- ggradar(sa_pl_merge_21_22_perc_radar_bottom_3,
                                grid.min = 0,
@@ -506,12 +506,12 @@ ggsave("sub_pro_4_sa_pl_analysis/images/21_22/sa_pl_analysis_21_22_perc_radar_bo
 # Bottom 3 Teams (Percent Metrics)
 
 sa_pl_merge_21_22_perc_radar_top_bottom_2 <- sa_pl_merge_21_22_perc_radar |>
-  filter(team_name %in% c("Mamelodi Sundowns", "Orlando Pirates", "SuperSport United", "Cape Town City"))
+  filter(team_name %in% c("Mamelodi Sundowns", "Cape Town City", "Moroka Swallows", "Baroka FC"))
 
 my_top_bottom_colors <- c("Mamelodi Sundowns" = "#000080", 
-                          "Orlando Pirates" = "#2FBE25", 
-                          "SuperSport United" = "#BE8125", 
-                          "Cape Town City" = "#BE25AB")
+                          "Cape Town City" = "#2FBE25", 
+                          "Moroka Swallows" = "#BE8125", 
+                          "Baroka FC" = "#BE25AB")
 
 perc_radar_top_bottom_2 <- ggradar(sa_pl_merge_21_22_perc_radar_top_bottom_2,
                                    grid.min = 0,

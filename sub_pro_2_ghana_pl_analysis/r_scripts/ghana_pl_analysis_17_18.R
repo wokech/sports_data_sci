@@ -74,8 +74,8 @@ ghana_pl_merge_bar_17_18_pt_gd_long %>%
             hjust = -0.05, vjust = -0.25, size = 7, 
             inherit.aes = FALSE) +
   scale_fill_manual(values = c("P" = "purple3", "GD" = "salmon1")) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.3)), 
-                     breaks = seq(-40, 80, by = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.25)), 
+                     breaks = seq(-70, 80, by = 10)) +
   labs(x = NULL, y = "Value", fill = "Metric") +
   coord_flip() + 
   labs(x = "", y = "",
@@ -83,7 +83,7 @@ ghana_pl_merge_bar_17_18_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),

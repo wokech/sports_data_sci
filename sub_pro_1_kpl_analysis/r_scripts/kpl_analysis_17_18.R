@@ -87,7 +87,7 @@ kpl_merge_bar_17_18_pt_gd_long %>%
             inherit.aes = FALSE) +
   scale_fill_manual(values = c("P" = "purple3", "GD" = "salmon1")) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.25)), 
-                     breaks = seq(-40, 80, by = 10)) +
+                     breaks = seq(-50, 80, by = 10)) +
   labs(x = NULL, y = "Value", fill = "Metric") +
   coord_flip() + 
   labs(x = "", y = "",
@@ -95,7 +95,7 @@ kpl_merge_bar_17_18_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -107,7 +107,7 @@ kpl_merge_bar_17_18_pt_gd_long %>%
         plot.background = element_rect(fill = "azure2", color = "azure2"), 
         panel.background = element_rect(fill = "azure2", color = "azure2"))
 
-#ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_pt_gd.png", width = 12, height = 12, dpi = 300)
+# ggsave("sub_pro_1_kpl_analysis/images/17_18/kpl_analysis_17_18_pt_gd.png", width = 12, height = 12, dpi = 300)
 
 # 2) Plot of Wins and Losses in a Lollipop Chart
 

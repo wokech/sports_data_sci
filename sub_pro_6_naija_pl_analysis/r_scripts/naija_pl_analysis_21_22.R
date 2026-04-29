@@ -79,7 +79,7 @@ naija_pl_merge_bar_21_22_pt_gd_long %>%
             hjust = -0.05, vjust = -0.25, size = 7, 
             inherit.aes = FALSE) +
   scale_fill_manual(values = c("P" = "purple3", "GD" = "salmon1")) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.2)), 
+  scale_y_continuous(expand = expansion(mult = c(0, 0.3)), 
                      breaks = seq(-40, 80, by = 10)) +
   labs(x = NULL, y = "Value", fill = "Metric") +
   coord_flip() + 
@@ -88,7 +88,7 @@ naija_pl_merge_bar_21_22_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -398,11 +398,11 @@ naija_pl_merge_21_22_perc_radar <- naija_pl_merge_21_22_perc |>
 # Top 3 Teams (Percent Metrics)
 
 naija_pl_merge_21_22_perc_radar_top_3 <- naija_pl_merge_21_22_perc_radar |>
-  filter(team_name %in% c("Remo Stars", "Rivers United FC", "Abia Warriors"))
+  filter(team_name %in% c("Rivers United FC", "Plateau United", "Remo Stars"))
 
-my_top_colors <- c("Remo Stars" = "#BE8125", 
-                   "Rivers United FC" = "#2FBE25", 
-                   "Abia Warriors" = "#BE25AB")
+my_top_colors <- c("Rivers United FC" = "#BE8125", 
+                   "Plateau United" = "#2FBE25", 
+                   "Remo Stars" = "#BE25AB")
 
 perc_radar_top_3 <- ggradar(naija_pl_merge_21_22_perc_radar_top_3,
                             grid.min = 0,
@@ -452,11 +452,11 @@ ggsave("sub_pro_6_naija_pl_analysis/images/21_22/naija_pl_analysis_21_22_perc_ra
 # Bottom 3 Teams (Percent Metrics)
 
 naija_pl_merge_21_22_perc_radar_bottom_3 <- naija_pl_merge_21_22_perc_radar |>
-  filter(team_name %in% c("Akwa United", "Sunshine Stars", "Lobi Stars"))
+  filter(team_name %in% c("Heartland", "Kano Pillars", "MFM FC"))
 
-my_bottom_colors <- c("Akwa United" = "#BE8125", 
-                      "Sunshine Stars" = "#2FBE25", 
-                      "Lobi Stars" = "#BE25AB")
+my_bottom_colors <- c("Heartland" = "#BE8125", 
+                      "Kano Pillars" = "#2FBE25", 
+                      "MFM FC" = "#BE25AB")
 
 perc_radar_bottom_3 <- ggradar(naija_pl_merge_21_22_perc_radar_bottom_3,
                                grid.min = 0,
@@ -506,12 +506,12 @@ ggsave("sub_pro_6_naija_pl_analysis/images/21_22/naija_pl_analysis_21_22_perc_ra
 # Top Bottom 2 Teams (Percent Metrics)
 
 naija_pl_merge_21_22_perc_radar_top_bottom_2 <- naija_pl_merge_21_22_perc_radar |>
-  filter(team_name %in% c("Remo Stars", "Rivers United FC", "Sunshine Stars", "Lobi Stars"))
+  filter(team_name %in% c("Rivers United FC", "Plateau United", "Kano Pillars", "MFM FC"))
 
-my_top_bottom_colors <- c("Remo Stars" = "#000080", 
-                          "Rivers United FC" = "#2FBE25", 
-                          "Sunshine Stars" = "#BE8125", 
-                          "Lobi Stars" = "#BE25AB")
+my_top_bottom_colors <- c("Rivers United FC" = "#000080", 
+                          "Plateau United" = "#2FBE25", 
+                          "Kano Pillars" = "#BE8125", 
+                          "MFM FC" = "#BE25AB")
 
 perc_radar_top_bottom_2 <- ggradar(naija_pl_merge_21_22_perc_radar_top_bottom_2,
                                    grid.min = 0,

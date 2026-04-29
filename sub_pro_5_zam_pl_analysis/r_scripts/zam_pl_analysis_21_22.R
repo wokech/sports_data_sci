@@ -84,7 +84,7 @@ zam_pl_merge_bar_21_22_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -114,7 +114,8 @@ ggplot(zam_pl_merge_lollipop_21_22_w_l) +
                color = "darkolivegreen3", linewidth = 4) +
   geom_point(aes(x = W_PCT, y = team_name), color = "darkgreen", size = 8) +
   geom_point(aes(x = L_PCT, y = team_name), color = "goldenrod2", size = 8) +
-  scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 1),
+                     expand = expansion(mult = c(0, 0.3))) +
   labs(x = "", y = "",
        title = "") +
   theme_minimal() +
@@ -392,11 +393,11 @@ zam_pl_merge_21_22_perc_radar <- zam_pl_merge_21_22_perc |>
 # Top 3 Teams (Percent Metrics)
 
 zam_pl_merge_21_22_perc_radar_top_3 <- zam_pl_merge_21_22_perc_radar |>
-  filter(team_name == c("Power Dynamos", "Zesco United", "Nkana"))
+  filter(team_name == c("Red Arrows", "Zesco United", "Green Eagles"))
 
-my_top_colors <- c("Power Dynamos" = "#BE8125", 
+my_top_colors <- c("Red Arrows" = "#BE8125", 
                    "Zesco United" = "#2FBE25", 
-                   "Nkana" = "#BE25AB")
+                   "Green Eagles" = "#BE25AB")
 
 perc_radar_top_3 <- ggradar(zam_pl_merge_21_22_perc_radar_top_3,
                             grid.min = 0,
@@ -446,11 +447,11 @@ ggsave("sub_pro_5_zam_pl_analysis/images/21_22/zam_pl_analysis_21_22_perc_radar_
 # Bottom 3 Teams (Percent Metrics)
 
 zam_pl_merge_21_22_perc_radar_bottom_3 <- zam_pl_merge_21_22_perc_radar |>
-  filter(team_name == c("Forest Rangers", "Lumwana Radiants", "Indeni"))
+  filter(team_name == c("Kafue Celtic", "Indeni", "Konkola Blades"))
 
-my_bottom_colors <- c("Forest Rangers" = "#BE8125", 
-                      "Lumwana Radiants" = "#2FBE25", 
-                      "Indeni" = "#BE25AB")
+my_bottom_colors <- c("Kafue Celtic" = "#BE8125", 
+                      "Indeni" = "#2FBE25", 
+                      "Konkola Blades" = "#BE25AB")
 
 perc_radar_bottom_3 <- ggradar(zam_pl_merge_21_22_perc_radar_bottom_3,
                                grid.min = 0,
@@ -500,12 +501,12 @@ ggsave("sub_pro_5_zam_pl_analysis/images/21_22/zam_pl_analysis_21_22_perc_radar_
 # Top Bottom 2 Teams (Percent Metrics)
 
 zam_pl_merge_21_22_perc_radar_top_bottom_2 <- zam_pl_merge_21_22_perc_radar |>
-  filter(team_name %in% c("Power Dynamos", "Zesco United", "Lumwana Radiants", "Indeni"))
+  filter(team_name %in% c("Red Arrows", "Zesco United", "Indeni", "Konkola Blades"))
 
-my_top_bottom_colors <- c("Power Dynamos" = "#000080", 
+my_top_bottom_colors <- c("Red Arrows" = "#000080", 
                           "Zesco United" = "#2FBE25", 
-                          "Lumwana Radiants" = "#BE8125", 
-                          "Indeni" = "#BE25AB")
+                          "Indeni" = "#BE8125", 
+                          "Konkola Blades" = "#BE25AB")
 
 perc_radar_top_bottom_2 <- ggradar(zam_pl_merge_21_22_perc_radar_top_bottom_2,
                                    grid.min = 0,

@@ -85,7 +85,7 @@ zam_pl_merge_bar_17_18_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -393,10 +393,10 @@ zam_pl_merge_17_18_perc_radar <- zam_pl_merge_17_18_perc |>
 # Top 3 Teams (Percent Metrics)
 
 zam_pl_merge_17_18_perc_radar_top_3 <- zam_pl_merge_17_18_perc_radar |>
-  filter(team_name == c("Power Dynamos", "Zesco United", "Nkana"))
+  filter(team_name == c("Zesco United", "Zanaco", "Nkana"))
 
-my_top_colors <- c("Power Dynamos" = "#BE8125", 
-                   "Zesco United" = "#2FBE25", 
+my_top_colors <- c("Zesco United" = "#BE8125", 
+                   "Zanaco" = "#2FBE25", 
                    "Nkana" = "#BE25AB")
 
 perc_radar_top_3 <- ggradar(zam_pl_merge_17_18_perc_radar_top_3,
@@ -447,11 +447,11 @@ ggsave("sub_pro_5_zam_pl_analysis/images/17_18/zam_pl_analysis_17_18_perc_radar_
 # Bottom 3 Teams (Percent Metrics)
 
 zam_pl_merge_17_18_perc_radar_bottom_3 <- zam_pl_merge_17_18_perc_radar |>
-  filter(team_name == c("Forest Rangers", "Lumwana Radiants", "Indeni"))
+  filter(team_name %in% c("Konkola Blades", "Real Nakonde", "City of Lusaka"))
 
-my_bottom_colors <- c("Forest Rangers" = "#BE8125", 
-                      "Lumwana Radiants" = "#2FBE25", 
-                      "Indeni" = "#BE25AB")
+my_bottom_colors <- c("Konkola Blades" = "#BE8125", 
+                      "Real Nakonde" = "#2FBE25", 
+                      "City of Lusaka" = "#BE25AB")
 
 perc_radar_bottom_3 <- ggradar(zam_pl_merge_17_18_perc_radar_bottom_3,
                                grid.min = 0,
@@ -501,12 +501,12 @@ ggsave("sub_pro_5_zam_pl_analysis/images/17_18/zam_pl_analysis_17_18_perc_radar_
 # Top Bottom 2 Teams (Percent Metrics)
 
 zam_pl_merge_17_18_perc_radar_top_bottom_2 <- zam_pl_merge_17_18_perc_radar |>
-  filter(team_name %in% c("Power Dynamos", "Zesco United", "Lumwana Radiants", "Indeni"))
+  filter(team_name %in% c("Zesco United", "Zanaco", "Real Nakonde", "City of Lusaka"))
 
-my_top_bottom_colors <- c("Power Dynamos" = "#000080", 
-                          "Zesco United" = "#2FBE25", 
-                          "Lumwana Radiants" = "#BE8125", 
-                          "Indeni" = "#BE25AB")
+my_top_bottom_colors <- c("Zesco United" = "#000080", 
+                          "Zanaco" = "#2FBE25", 
+                          "Real Nakonde" = "#BE8125", 
+                          "City of Lusaka" = "#BE25AB")
 
 perc_radar_top_bottom_2 <- ggradar(zam_pl_merge_17_18_perc_radar_top_bottom_2,
                                    grid.min = 0,

@@ -96,7 +96,7 @@ kpl_merge_bar_19_20_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -126,7 +126,7 @@ ggplot(kpl_merge_lollipop_19_20_w_l) +
   geom_point(aes(x = W_PCT, y = team_name), color = "darkgreen", size = 8) +
   geom_point(aes(x = L_PCT, y = team_name), color = "goldenrod2", size = 8) +
   scale_x_continuous(labels = scales::percent_format(accuracy = 1),
-                     expand = expansion(mult = c(0, 0.1))) +
+                     expand = expansion(mult = c(0.1, 0.1))) +
   labs(x = "", y = "",
        title = "") +
   theme_minimal() +

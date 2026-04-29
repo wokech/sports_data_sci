@@ -84,8 +84,8 @@ naija_pl_merge_bar_23_24_pt_gd_long %>%
             hjust = -0.05, vjust = -0.25, size = 7, 
             inherit.aes = FALSE) +
   scale_fill_manual(values = c("P" = "purple3", "GD" = "salmon1")) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.2)), 
-                     breaks = seq(-40, 80, by = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.35)), 
+                     breaks = seq(-60, 80, by = 10)) +
   labs(x = NULL, y = "Value", fill = "Metric") +
   coord_flip() + 
   labs(x = "", y = "",
@@ -93,7 +93,7 @@ naija_pl_merge_bar_23_24_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -298,6 +298,7 @@ ggplot(naija_pl_merge_bar_23_24_gf_ga, aes(x = A, y = F)) +
            ymin = for_thresh, ymax = Inf, alpha = 0.2, fill = "pink") +
   geom_hline(yintercept = for_thresh, linetype = "dashed", color = "gray") +
   geom_vline(xintercept = against_thresh, linetype = "dashed", color = "gray") +
+  scale_x_continuous(expand = expansion(mult = c(0.1, 0.1))) +
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
@@ -403,11 +404,11 @@ naija_pl_merge_23_24_perc_radar <- naija_pl_merge_23_24_perc |>
 # Top 3 Teams (Percent Metrics)
 
 naija_pl_merge_23_24_perc_radar_top_3 <- naija_pl_merge_23_24_perc_radar |>
-  filter(team_name %in% c("Remo Stars", "Rivers United FC", "Abia Warriors"))
+  filter(team_name %in% c("Rangers International", "Remo Stars", "Enyimba"))
 
-my_top_colors <- c("Remo Stars" = "#BE8125", 
-                   "Rivers United FC" = "#2FBE25", 
-                   "Abia Warriors" = "#BE25AB")
+my_top_colors <- c("Rangers International" = "#BE8125", 
+                   "Remo Stars" = "#2FBE25", 
+                   "Enyimba" = "#BE25AB")
 
 perc_radar_top_3 <- ggradar(naija_pl_merge_23_24_perc_radar_top_3,
                             grid.min = 0,
@@ -457,11 +458,11 @@ ggsave("sub_pro_6_naija_pl_analysis/images/23_24/naija_pl_analysis_23_24_perc_ra
 # Bottom 3 Teams (Percent Metrics)
 
 naija_pl_merge_23_24_perc_radar_bottom_3 <- naija_pl_merge_23_24_perc_radar |>
-  filter(team_name %in% c("Akwa United", "Sunshine Stars", "Lobi Stars"))
+  filter(team_name %in% c("Doma United", "Heartland", "Gombe United"))
 
-my_bottom_colors <- c("Akwa United" = "#BE8125", 
-                      "Sunshine Stars" = "#2FBE25", 
-                      "Lobi Stars" = "#BE25AB")
+my_bottom_colors <- c("Doma United" = "#BE8125", 
+                      "Heartland" = "#2FBE25", 
+                      "Gombe United" = "#BE25AB")
 
 perc_radar_bottom_3 <- ggradar(naija_pl_merge_23_24_perc_radar_bottom_3,
                                grid.min = 0,
@@ -511,12 +512,12 @@ ggsave("sub_pro_6_naija_pl_analysis/images/23_24/naija_pl_analysis_23_24_perc_ra
 # Top Bottom 2 Teams (Percent Metrics)
 
 naija_pl_merge_23_24_perc_radar_top_bottom_2 <- naija_pl_merge_23_24_perc_radar |>
-  filter(team_name %in% c("Remo Stars", "Rivers United FC", "Sunshine Stars", "Lobi Stars"))
+  filter(team_name %in% c("Rangers International", "Remo Stars", "Heartland", "Gombe United"))
 
-my_top_bottom_colors <- c("Remo Stars" = "#000080", 
-                          "Rivers United FC" = "#2FBE25", 
-                          "Sunshine Stars" = "#BE8125", 
-                          "Lobi Stars" = "#BE25AB")
+my_top_bottom_colors <- c("Rangers International" = "#000080", 
+                          "Remo Stars" = "#2FBE25", 
+                          "Heartland" = "#BE8125", 
+                          "Gombe United" = "#BE25AB")
 
 perc_radar_top_bottom_2 <- ggradar(naija_pl_merge_23_24_perc_radar_top_bottom_2,
                                    grid.min = 0,

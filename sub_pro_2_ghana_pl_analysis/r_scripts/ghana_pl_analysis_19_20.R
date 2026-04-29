@@ -80,7 +80,7 @@ ghana_pl_merge_bar_19_20_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -282,6 +282,7 @@ ggplot(ghana_pl_merge_bar_19_20_gf_ga, aes(x = A, y = F)) +
   geom_point(color = "brown4", size = 6) +
   geom_text_repel(aes(label = team_name), vjust = -0.5, size = 8) +
   labs(x = "Goals Against", y = "Goals For", title = "") +
+  scale_x_continuous(expand = expansion(mult = c(0.1, 0.1))) +
   annotate("rect", xmin = -Inf, xmax = against_thresh,
            ymin = for_thresh, ymax = Inf, alpha = 0.2, fill = "pink") +
   geom_hline(yintercept = for_thresh, linetype = "dashed", color = "gray") +
@@ -390,11 +391,11 @@ ghana_pl_merge_19_20_perc_radar <- ghana_pl_merge_19_20_perc |>
 # Top 3 Teams (Percent Metrics)
 
 ghana_pl_merge_19_20_perc_radar_top_3 <- ghana_pl_merge_19_20_perc_radar |>
-  filter(team_name == c("Bibiani Gold Stars", "Heart of Lions", "Asante Kotoko"))
+  filter(team_name == c("Medeama", "Aduana Stars", "Berekum Chelsea"))
 
-my_top_colors <- c("Bibiani Gold Stars" = "#BE8125", 
-                   "Heart of Lions" = "#2FBE25", 
-                   "Asante Kotoko" = "#BE25AB")
+my_top_colors <- c("Medeama" = "#BE8125", 
+                   "Aduana Stars" = "#2FBE25", 
+                   "Berekum Chelsea" = "#BE25AB")
 
 perc_radar_top_3 <- ggradar(ghana_pl_merge_19_20_perc_radar_top_3,
                             grid.min = 0,
@@ -444,11 +445,11 @@ ggsave("sub_pro_2_ghana_pl_analysis/images/19_20/ghana_pl_analysis_19_20_perc_ra
 # Bottom 3 Teams (Percent Metrics)
 
 ghana_pl_merge_19_20_perc_radar_bottom_3 <- ghana_pl_merge_19_20_perc_radar |>
-  filter(team_name == c("Accra Lions", "Legon Cities", "Nsoatreman"))
+  filter(team_name == c("Ebusua Dwarfs", "Karela", "King Faisal Babes"))
 
-my_bottom_colors <- c("Accra Lions" = "#BE8125", 
-                      "Legon Cities" = "#2FBE25", 
-                      "Nsoatreman" = "#BE25AB")
+my_bottom_colors <- c("Ebusua Dwarfs" = "#BE8125", 
+                      "Karela" = "#2FBE25", 
+                      "King Faisal Babes" = "#BE25AB")
 
 perc_radar_bottom_3 <- ggradar(ghana_pl_merge_19_20_perc_radar_bottom_3,
                                grid.min = 0,
@@ -498,12 +499,12 @@ ggsave("sub_pro_2_ghana_pl_analysis/images/19_20/ghana_pl_analysis_19_20_perc_ra
 # Bottom 3 Teams (Percent Metrics)
 
 ghana_pl_merge_19_20_perc_radar_top_bottom_2 <- ghana_pl_merge_19_20_perc_radar |>
-  filter(team_name %in% c("Bibiani Gold Stars", "Heart of Lions", "Legon Cities", "Nsoatreman"))
+  filter(team_name %in% c("Medeama", "Aduana Stars", "Karela", "King Faisal Babes"))
 
-my_top_bottom_colors <- c("Bibiani Gold Stars" = "#000080", 
-                          "Heart of Lions" = "#2FBE25", 
-                          "Legon Cities" = "#BE8125", 
-                          "Nsoatreman" = "#BE25AB")
+my_top_bottom_colors <- c("Medeama" = "#000080", 
+                          "Aduana Stars" = "#2FBE25", 
+                          "Karela" = "#BE8125", 
+                          "King Faisal Babes" = "#BE25AB")
 
 perc_radar_top_bottom_2 <- ggradar(ghana_pl_merge_19_20_perc_radar_top_bottom_2,
                                    grid.min = 0,

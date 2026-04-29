@@ -79,7 +79,7 @@ ghana_pl_merge_bar_24_25_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -389,11 +389,11 @@ ghana_pl_merge_24_25_perc_radar <- ghana_pl_merge_24_25_perc |>
 # Top 3 Teams (Percent Metrics)
 
 ghana_pl_merge_24_25_perc_radar_top_3 <- ghana_pl_merge_24_25_perc_radar |>
-  filter(team_name == c("Bibiani Gold Stars", "Heart of Lions", "Asante Kotoko"))
+  filter(team_name == c("Bibiani Gold Stars", "Heart of Lions", "Hearts of Oak"))
 
 my_top_colors <- c("Bibiani Gold Stars" = "#BE8125", 
                    "Heart of Lions" = "#2FBE25", 
-                   "Asante Kotoko" = "#BE25AB")
+                   "Hearts of Oak" = "#BE25AB")
 
 perc_radar_top_3 <- ggradar(ghana_pl_merge_24_25_perc_radar_top_3,
                             grid.min = 0,

@@ -90,7 +90,7 @@ sa_pl_merge_bar_23_24_pt_gd_long %>%
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
-        axis.text.x =element_text(size = 28),
+        axis.text.x =element_text(size = 24),
         axis.text.y =element_blank(),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -294,7 +294,7 @@ ggplot(sa_pl_merge_bar_23_24_gf_ga, aes(x = A, y = F)) +
            ymin = for_thresh, ymax = Inf, alpha = 0.2, fill = "pink") +
   geom_hline(yintercept = for_thresh, linetype = "dashed", color = "gray") +
   geom_vline(xintercept = against_thresh, linetype = "dashed", color = "gray") +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.05))) +
   theme_minimal() +
   theme(axis.title.x =element_text(size = 32),
         axis.title.y =element_text(size = 32, angle = 90),
@@ -453,11 +453,11 @@ ggsave("sub_pro_4_sa_pl_analysis/images/23_24/sa_pl_analysis_23_24_perc_radar_to
 # Bottom 3 Teams (Percent Metrics)
 
 sa_pl_merge_23_24_perc_radar_bottom_3 <- sa_pl_merge_23_24_perc_radar |>
-  filter(team_name == c("Magesi FC", "SuperSport United", "Cape Town City"))
+  filter(team_name == c("Moroka Swallows", "Richards Bay", "Cape Town Spurs FC"))
 
-my_bottom_colors <- c("Magesi FC" = "#BE8125", 
-                      "SuperSport United" = "#2FBE25", 
-                      "Cape Town City" = "#BE25AB")
+my_bottom_colors <- c("Moroka Swallows" = "#BE8125", 
+                      "Richards Bay" = "#2FBE25", 
+                      "Cape Town Spurs FC" = "#BE25AB")
 
 perc_radar_bottom_3 <- ggradar(sa_pl_merge_23_24_perc_radar_bottom_3,
                                grid.min = 0,
@@ -507,12 +507,12 @@ ggsave("sub_pro_4_sa_pl_analysis/images/23_24/sa_pl_analysis_23_24_perc_radar_bo
 # Bottom 3 Teams (Percent Metrics)
 
 sa_pl_merge_23_24_perc_radar_top_bottom_2 <- sa_pl_merge_23_24_perc_radar |>
-  filter(team_name %in% c("Mamelodi Sundowns", "Orlando Pirates", "SuperSport United", "Cape Town City"))
+  filter(team_name %in% c("Mamelodi Sundowns", "Orlando Pirates", "Richards Bay", "Cape Town Spurs FC"))
 
 my_top_bottom_colors <- c("Mamelodi Sundowns" = "#000080", 
                           "Orlando Pirates" = "#2FBE25", 
-                          "SuperSport United" = "#BE8125", 
-                          "Cape Town City" = "#BE25AB")
+                          "Richards Bay" = "#BE8125", 
+                          "Cape Town Spurs FC" = "#BE25AB")
 
 perc_radar_top_bottom_2 <- ggradar(sa_pl_merge_23_24_perc_radar_top_bottom_2,
                                    grid.min = 0,
