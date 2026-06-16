@@ -31,7 +31,7 @@ library(stringr)
 
 # Load the required data
 
-fifa_tm_top_player_value <- read_excel("datasets/FIFA_Ranking_Player_Value_Aug_2023.xlsx")
+fifa_tm_top_player_value <- read_excel("sub_pro_12_fifa_tm_analysis/datasets/FIFA_Ranking_Player_Value_Aug_2023.xlsx")
 
 fifa_tm_top_player_value_clean <- fifa_tm_top_player_value %>%
   clean_names()
@@ -55,7 +55,7 @@ fifa_tm_top_player_value_clean_1 %>%
   geom_text_repel(aes(label = ifelse(ranking_aug_2023 > 140, name_country, "")), size = 10,
                   seed = 42, box.padding = 0.5, segment.length = 2, segment.size = 1) +
   labs(x = "FIFA Ranking (Aug 2023)",
-       y = "Market Value (Euros)",
+       y = "Market Value, 2023 (Euros)",
        title = "FIFA ranking correlates with a team's\nhighest player value",
        subtitle = "Comparing FIFA ranking with the market value of the top\nfootballers in East and West Africa",
        caption = "Data Source: transfermarkt",
@@ -63,25 +63,26 @@ fifa_tm_top_player_value_clean_1 %>%
   theme_classic() +
   scale_y_log10(labels  = 
                   label_number(scale = 1e-6, prefix = "$", suffix = "m", accuracy = 0.01)) +
-  scale_color_manual(values = c("goldenrod2", "darkgreen"), labels = c('East Africa', 'West Africa')) +
+  scale_color_manual(values = c("salmon", "darkgreen"), labels = c('East Africa', 'West Africa')) +
   theme(axis.title.x =element_text(size = 28, vjust = 1, face = "bold"),
         axis.title.y =element_text(size = 28,  vjust = 1, face = "bold"),
         axis.text.x = element_text(size = 28, face = "bold", color = "black"),
         axis.text.y = element_text(size = 28, face = "bold", color = "black"),
-        plot.title = element_text(family="Helvetica", face="bold", size = 36, colour = "#000000"),
-        plot.subtitle = element_text(family="Helvetica", size = 24),
-        plot.caption = element_text(family = "Helvetica",size = 24, vjust = 1),
-        plot.background = element_rect(fill = "azure2", colour = "azure2"),
-        panel.background = element_rect(fill = "azure2", colour = "azure2"),
+        plot.title = element_blank(),
+        plot.subtitle = element_blank(),
+        plot.caption = element_blank(),
+        panel.grid= element_blank(),
+        #plot.background = element_rect(fill = "azure2", colour = "azure2"),
+        #panel.background = element_rect(fill = "azure2", colour = "azure2"),
         plot.title.position = "plot",
         plot.subtitle.position = "plot",
         plot.caption.position = "plot",
         legend.title = element_blank(),
         legend.text = element_text(size = 28),
-        legend.background = element_rect("azure2"),
+        #legend.background = element_rect("azure2"),
         legend.position = c(0.15,0.15))
 
-ggsave("images/fifa_tm_top_player/rank_value_square.png", width = 12, height = 12, dpi = 72)
+ggsave("sub_pro_12_fifa_tm_analysis/images/fifa_tm_top_player/rank_value_square.png", width = 12, height = 12, dpi = 300)
 
 
 # 2) Player value of the most valuable player
@@ -99,12 +100,12 @@ fifa_tm_top_player_value_clean_split_name %>%
                      breaks = seq(0, 150000000, 25000000), 
                      labels  = 
                        label_number(scale = 1e-6, prefix = "$", suffix = "m", accuracy = 1)) +
-  scale_fill_manual(values = c("goldenrod2", "darkgreen"), labels = c('East Africa', 'West Africa')) +
+  scale_fill_manual(values = c("salmon", "darkgreen"), labels = c('East Africa', 'West Africa')) +
   geom_text(aes(label = paste(surname, " (", country, ")", sep = ""), hjust = 0), size = 7) +
   coord_flip() +
   theme_minimal() +
   labs(x = "",
-       y = "Market Value (Euros)",
+       y = "Market Value, 2023 (Euros)",
        title = "The dominance of West Africa's most\nvaluable football players",
        subtitle = "Market value (East and West Africa)",
        caption = "Data Source: transfermarkt",
@@ -116,18 +117,19 @@ fifa_tm_top_player_value_clean_split_name %>%
         axis.line.x = element_line(size = 1, colour = "black"),
         axis.ticks.x = element_line(size = 1, color="black") , 
         axis.ticks.length = unit(.25, "cm"),
-        plot.title = element_text(family="Helvetica", face="bold", size = 40),
-        plot.subtitle = element_text(family="Helvetica", face="bold", size = 24),
-        plot.caption = element_text(family = "Helvetica",size = 24, face = "bold"),
-        plot.background = element_rect(fill = "azure2", colour = "azure2"),
-        panel.background = element_rect(fill = "azure2", colour = "azure2"),
+        plot.title = element_blank(),
+        plot.subtitle = element_blank(),
+        plot.caption = element_blank(),
+        panel.grid= element_blank(),
+        #plot.background = element_rect(fill = "azure2", colour = "azure2"),
+        #panel.background = element_rect(fill = "azure2", colour = "azure2"),
         plot.margin = margin(0, 0, 0, 0, unit = "cm"),
         plot.title.position = "plot",
         plot.subtitle.position = "plot",
         plot.caption.position = "plot",
         legend.title = element_blank(),
         legend.text = element_text(size = 28),
-        legend.background = element_rect(color = "azure2", fill = "azure2"),
+        #legend.background = element_rect(color = "azure2", fill = "azure2"),
         legend.position = c(0.8, 0.2)) 
 
-ggsave("images/fifa_tm_top_player/market_value_square.png", width = 12, height = 12, dpi = 72)
+ggsave("sub_pro_12_fifa_tm_analysis/images/fifa_tm_top_player/market_value_square.png", width = 12, height = 12, dpi = 300)

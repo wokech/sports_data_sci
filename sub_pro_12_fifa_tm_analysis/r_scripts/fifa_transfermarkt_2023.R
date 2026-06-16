@@ -28,7 +28,7 @@ library(stringr)
 
 # Load the required data
 
-fifa_tm <- read_excel("datasets/FIFA_Ranking_Apr_6_2023.xlsx")
+fifa_tm <- read_excel("sub_pro_12_fifa_tm_analysis/datasets/FIFA_Ranking_Apr_6_2023.xlsx")
 
 fifa_tm_clean <- fifa_tm %>%
   clean_names()
@@ -112,10 +112,10 @@ fifa_tm_clean %>%
   geom_text_repel(aes(label = ifelse(number >= 100 & number < 105, nation, "")), size = 10) +
   geom_text_repel(aes(label = ifelse(number >= 200 & number < 205, nation, "")), size = 10) +
   labs(x = "FIFA Ranking (April 2023)",
-       y = "Average Player Value (Euros)",
-       title = "Highly ranked soccer teams have the highest\naverage player values",
-       subtitle = "Comparing the FIFA rankings and average player values globally",
-       caption = "Data Source: transfermarkt") +
+       y = "Average Player Value, 2023 (Euros)",
+       title = "",
+       subtitle = "",
+       caption = "") +
   theme_classic() +
   scale_fill_brewer(palette = "Set1") +
   scale_color_brewer(palette = "Set1") +
@@ -125,23 +125,24 @@ fifa_tm_clean %>%
         axis.title.y =element_text(size = 28, vjust = 1, face = "bold"),
         axis.text.x = element_text(size = 28, face = "bold", color = "black"),
         axis.text.y = element_text(size = 28, face = "bold", color = "black"),
-        plot.title = element_text(family="Helvetica", face="bold", size = 36, colour = "#000000"),
-        plot.subtitle = element_text(family="Helvetica", size = 24),
-        plot.caption = element_text(family = "Helvetica",size = 24, vjust = 1),
-        plot.background = element_rect(fill = "azure2", colour = "azure2"),
-        panel.background = element_rect(fill = "azure2", colour = "azure2"),
+        plot.title = element_blank(),
+        plot.subtitle = element_blank(),
+        plot.caption = element_blank(),
+        #plot.background = element_rect(fill = "bisque1", colour = "bisque1"),
+        #panel.background = element_rect(fill = "bisque1", colour = "bisque1"),
         plot.title.position = "plot",
         plot.subtitle.position = "plot",
         plot.caption.position = "plot",
+        panel.grid= element_blank(),
         legend.title = element_blank(),
         legend.text = element_text(size = 28),
-        legend.background = element_rect("azure2"),
+        #legend.background = element_rect("bisque1"),
         legend.position = c(.95, .95),
         legend.justification = c("right", "top"),
         legend.box.just = "right",
         legend.margin = margin(6, 6, 6, 6))
 
-ggsave("images/fifa_tm/all_teams_square.png", width = 12, height = 12, dpi = 72)
+ggsave("sub_pro_12_fifa_tm_analysis/images/fifa_tm/all_teams_square.png", width = 12, height = 12, dpi = 300)
 
 fifa_tm_clean_uefa %>%
   ggplot(aes(number, average_player_cost)) + 
@@ -332,29 +333,29 @@ fifa_tm_clean_eac_ecowas %>%
   geom_text_repel(aes(label = nation), size = 10,
                   min.segment.length = 0, seed = 42, box.padding = 0.5) +
   labs(x = "FIFA Ranking (April 2023)",
-       y = "Average Player Value (Euros)",
+       y = "Average Player Value, 2023 (Euros)",
        title = "West Africa dominates the East-West\nsoccer battle",
        subtitle = "Comparing the FIFA rankings and average player\nvalues for East and West African soccer teams",
        caption = "Data Source: transfermarkt") +
   theme_classic() +
   scale_y_log10(labels  = 
                   label_number(scale = 1e-6, prefix = "$", suffix = "m", accuracy = 0.01)) +
-  scale_color_manual(labels = c('East Africa', 'West Africa'), values = c("goldenrod2", "darkgreen")) +
+  scale_color_manual(labels = c('East Africa', 'West Africa'), values = c("salmon", "darkgreen")) +
   theme(axis.title.x =element_text(size = 28, vjust = 1, face = "bold"),
         axis.title.y =element_text(size = 28, vjust = 1, face = "bold"),
         axis.text.x = element_text(size = 28, face = "bold", color = "black"),
         axis.text.y = element_text(size = 28, face = "bold", color = "black"),
-        plot.title = element_text(family="Helvetica", face="bold", size = 36, colour = "#000000", hjust = 0.5),
-        plot.subtitle = element_text(family="Helvetica", size = 24, hjust = 0.5),
-        plot.caption = element_text(family = "Helvetica",size = 24, vjust = 1),
-        plot.background = element_rect(fill = "azure2", colour = "azure2"),
-        panel.background = element_rect(fill = "azure2", colour = "azure2"),
+        plot.title = element_blank(),
+        plot.subtitle = element_blank(),
+        plot.caption = element_blank(),
+        #plot.background = element_rect(fill = "bisque1", colour = "bisque1"),
+        #panel.background = element_rect(fill = "bisque1", colour = "bisque1"),
         legend.title = element_blank(),
         legend.text = element_text(size = 24),
-        legend.background = element_rect("azure2"),
+        #legend.background = element_rect("bisque1"),
         legend.position = c(.95, .95),
         legend.justification = c("right", "top"),
         legend.box.just = "right",
         legend.margin = margin(6, 6, 6, 6))
 
-ggsave("images/fifa_tm/west_east_square.png", width = 12, height = 12, dpi = 72)
+ggsave("sub_pro_12_fifa_tm_analysis/images/fifa_tm/west_east_square.png", width = 12, height = 12, dpi = 300)
