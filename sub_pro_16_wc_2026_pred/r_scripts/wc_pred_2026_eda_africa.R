@@ -36,11 +36,15 @@ wc_2026_pred_clean_scale_norm_tsi_1 <- wc_2026_pred_clean_scale_norm |>
            (0.35*team_value_euros) + (0.05*percent_foreigners) + (0.1*gdp_per_capita) + 
            (0.05*population) + (0.05*kalshi_odds_percent) + (0.05*polymarket_odds_percent))
 
+africa <- c("South Africa", "Morocco", "Ivory Coast", "Tunisia", "Egypt",
+            "Cabo Verde", "Senegal", "Algeria", "DR Congo", "Ghana")
+
 # EDA 
 
 # 1) FIFA ranking points vs ELO rating
 
 wc_2026_pred_clean |>
+  filter(country %in% africa) |>
   ggplot(aes(elo_rating, fifa_ranking_points, size = 5)) + 
   geom_jitter(size = 5) +
   geom_smooth(method=lm , color="black", se=FALSE, size = 1, linetype = "dashed") +
@@ -50,14 +54,7 @@ wc_2026_pred_clean |>
        title = "",
        subtitle = "",
        caption = "") +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1421, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1562, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1680, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1726, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1827, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1834, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1914, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1938, country, "")), size = 8) +
+  geom_text_repel(aes(label = country), size = 8) +
   theme(axis.title.x =element_text(size = 28, vjust = 1, face = "bold"),
         axis.title.y =element_text(size = 28, vjust = 1, face = "bold"),
         axis.text.x = element_text(size = 28, face = "bold", color = "black"),
@@ -79,13 +76,16 @@ wc_2026_pred_clean |>
         legend.box.just = "right",
         legend.margin = margin(6, 6, 6, 6))
 
-ggsave("sub_pro_16_wc_2026_pred/images/fifa_vs_elo.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_16_wc_2026_pred/images/africa/fifa_vs_elo.png", width = 12, height = 12, dpi = 300)
 
-# library(ggpmisc)
-# ggplot(data = wc_2026_pred_clean, aes(elo_rating, fifa_ranking_points)) +
-#   stat_poly_line() +
-#   stat_poly_eq() +
-#   geom_point()
+library(ggpmisc)
+
+wc_2026_pred_clean |>
+  filter(country %in% africa) |>
+  ggplot(aes(elo_rating, fifa_ranking_points)) +
+  stat_poly_line() +
+  stat_poly_eq() +
+  geom_point()
 
 # 2) Transfermarkt team value
 
@@ -118,17 +118,18 @@ wc_2026_pred_clean_ordered_tm <- wc_2026_pred_clean |>
 
 
 wc_2026_pred_clean_ordered_tm |>
+  filter(country %in% africa) |>
   ggplot() + 
   geom_segment(aes(x = 0, xend = team_value_euros, y = country, yend = country), 
-               color = "salmon", linewidth = 4) +
-  geom_point(aes(x = team_value_euros, y = country), color = "brown4", size = 6) +
-  scale_x_log10(labels  = label_number(scale = 1e-6, prefix = "€", suffix = "m", accuracy = 1, big.mark = ",")) +
-  labs(x = "Team Market Value (Euros)", y = "",
+               color = "salmon", linewidth = 8) +
+  geom_point(aes(x = team_value_euros, y = country), color = "brown4", size = 12) +
+  scale_x_log10(labels  = label_number(scale = 1e-6, suffix = "m", accuracy = 1, big.mark = ",")) +
+  labs(x = "Team Market Value (Euros, €)", y = "",
        title = "") +
   theme_classic() + 
-  theme(axis.title.x =element_text(size = 32, face = "bold"),
-        axis.title.y =element_text(size = 32, angle = 90, face = "bold"),
-        axis.text.x =element_text(size = 28, face = "bold"),
+  theme(axis.title.x =element_text(size = 24, face = "bold"),
+        axis.title.y =element_text(size = 24, angle = 90, face = "bold"),
+        axis.text.x =element_text(size = 24, face = "bold"),
         axis.text.y =element_text(size = 24, face = "bold"),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -137,7 +138,7 @@ wc_2026_pred_clean_ordered_tm |>
         legend.title = element_blank(),
         plot.caption = element_text(family = "Helvetica",size = 12))
 
-ggsave("sub_pro_16_wc_2026_pred/images/transfermarkt.png", width = 12, height = 16, dpi = 300)
+ggsave("sub_pro_16_wc_2026_pred/images/africa/transfermarkt.png", width = 12, height = 12, dpi = 300)
 
 # 3) Percentage foreign-based players 
 
@@ -145,19 +146,20 @@ wc_2026_pred_clean_ordered_foreign <- wc_2026_pred_clean |>
   mutate(country = fct_reorder(country, percent_foreigners)) 
 
 wc_2026_pred_clean_ordered_foreign |>
+  filter(country %in% africa) |>
   ggplot() + 
   geom_segment(aes(x = 0, xend = percent_foreigners, y = country, yend = country), 
-               color = "goldenrod2", linewidth = 4) +
-  geom_point(aes(x = percent_foreigners, y = country), color = "goldenrod3", size = 6) +
+               color = "goldenrod2", linewidth = 8) +
+  geom_point(aes(x = percent_foreigners, y = country), color = "goldenrod3", size = 12) +
   scale_x_continuous(limits = c(0, 100), 
                      breaks = seq(0, 100, 25),
                      labels  = label_number(suffix = "%", accuracy = 1)) +
   labs(x = "Percentage of Foreign-Based Players", y = "",
        title = "") +
-  theme_light() + 
-  theme(axis.title.x =element_text(size = 32, face = "bold"),
-        axis.title.y =element_text(size = 32, angle = 90, face = "bold"),
-        axis.text.x =element_text(size = 26, face = "bold"),
+  theme_classic() + 
+  theme(axis.title.x =element_text(size = 24, face = "bold"),
+        axis.title.y =element_text(size = 24, angle = 90, face = "bold"),
+        axis.text.x =element_text(size = 24, face = "bold"),
         axis.text.y =element_text(size = 24, face = "bold"),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
@@ -167,13 +169,14 @@ wc_2026_pred_clean_ordered_foreign |>
         panel.grid= element_blank(),
         plot.caption = element_text(family = "Helvetica",size = 12))
 
-ggsave("sub_pro_16_wc_2026_pred/images/percent_foreign.png", width = 12, height = 16, dpi = 300)
+ggsave("sub_pro_16_wc_2026_pred/images/africa/percent_foreign.png", width = 12, height = 12, dpi = 300)
 
 # 4) Average temperatures
 
 n_groups <- length(unique(wc_2026_pred_clean$group))
 
 wc_2026_pred_clean |>
+  filter(country %in% africa) |>
   ggplot(aes(x = group, y = average_yearly_temp, label = country)) +
   geom_vline(
     xintercept = seq(1.5, n_groups - 0.5, by = 1),
@@ -188,10 +191,10 @@ wc_2026_pred_clean |>
   theme_light() + 
   labs(x = "Group", y = "Average Yearly\nTemperature (°C)",
        title = "") +
-  theme(axis.title.x =element_text(size = 24),
-        axis.title.y =element_text(size = 24, angle = 90),
-        axis.text.x =element_text(size = 18),
-        axis.text.y =element_text(size = 18),
+  theme(axis.title.x =element_text(size = 20),
+        axis.title.y =element_text(size = 20, angle = 90),
+        axis.text.x =element_text(size = 16),
+        axis.text.y =element_text(size = 16),
         axis.line.x = element_line(),
         axis.ticks.x = element_line(),
         axis.ticks.length.x = unit(5, "pt"),
@@ -200,23 +203,25 @@ wc_2026_pred_clean |>
         panel.grid= element_blank(),
         plot.caption = element_text(family = "Helvetica",size = 12))
 
-ggsave("sub_pro_16_wc_2026_pred/images/avg_yearly_temp.png", width = 12, height = 6, dpi = 300)
+ggsave("sub_pro_16_wc_2026_pred/images/africa/avg_yearly_temp.png", width = 8, height = 4, dpi = 300)
 
 # 5) TSI
 
 wc_2026_pred_clean_tsi_ordered <- wc_2026_pred_clean_scale_norm_tsi_1 |>
   mutate(country = fct_reorder(country, tsi)) 
 
-ggplot(wc_2026_pred_clean_tsi_ordered) +
+wc_2026_pred_clean_tsi_ordered |>
+  filter(country %in% africa) |>
+  ggplot() +
   geom_segment(aes(x = 0, xend = tsi, y = country, yend = country), 
-               color = "black", linewidth = 6) +
+               color = "black", linewidth = 12) +
   #geom_point(aes(x = tsi, y = country), color = "black", size = 4) +
-  scale_x_continuous(expand = expansion(mult = c(0.1, 0.1))) +
+  scale_x_continuous(expand = expansion(mult = c(0.1, 0.1)), n.breaks = 10) +
   labs(x = "Team Strength Index", y = "",
        title = "") +
   theme_classic() +
-  theme(axis.title.x =element_text(size = 32, face = "bold"),
-        axis.title.y =element_text(size = 32, angle = 90, face = "bold"),
+  theme(axis.title.x =element_text(size = 24, face = "bold"),
+        axis.title.y =element_text(size = 24, angle = 90, face = "bold"),
         axis.text.x =element_text(size = 24, face = "bold"),
         axis.text.y =element_text(size = 24, face = "bold"),
         axis.line.x = element_line(),
@@ -226,17 +231,21 @@ ggplot(wc_2026_pred_clean_tsi_ordered) +
         legend.title = element_blank(),
         plot.caption = element_text(family = "Helvetica",size = 12))
 
-ggsave("sub_pro_16_wc_2026_pred/images/tsi.png", width = 12, height = 16, dpi = 300)
+ggsave("sub_pro_16_wc_2026_pred/images/africa/tsi.png", width = 12, height = 12, dpi = 300)
 
-# 6) FIFA Ranking and Elo vs Team Value
+# 6) FIFA Ranking vs Team Value
 
-# library(ggpmisc)
-# ggplot(data = wc_2026_pred_clean, aes(fifa_ranking_points, team_value_euros)) +
-#   stat_poly_line() +
-#   stat_poly_eq() +
-#   geom_point()
+library(ggpmisc)
 
 wc_2026_pred_clean |>
+  filter(country %in% africa) |>
+  ggplot(aes(fifa_ranking_points, team_value_euros)) +
+  stat_poly_line() +
+  stat_poly_eq() +
+  geom_point()
+
+wc_2026_pred_clean |>
+  filter(country %in% africa) |>
   ggplot(aes(elo_rating, team_value_euros, size = 5)) + 
   geom_jitter(size = 5) +
   geom_smooth(method=lm , color="black", se=FALSE, size = 1, linetype = "dashed") +
@@ -247,12 +256,7 @@ wc_2026_pred_clean |>
        title = "",
        subtitle = "",
        caption = "") +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1510, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1618, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1680, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1695, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1730, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(elo_rating == 1772, country, "")), size = 8) +
+  geom_text_repel(aes(label = country), size = 8) +
   theme(axis.title.x =element_text(size = 28, vjust = 1, face = "bold"),
         axis.title.y =element_text(size = 28, vjust = 1, face = "bold"),
         axis.text.x = element_text(size = 28, face = "bold", color = "black"),
@@ -274,9 +278,19 @@ wc_2026_pred_clean |>
         legend.box.just = "right",
         legend.margin = margin(6, 6, 6, 6))
 
-ggsave("sub_pro_16_wc_2026_pred/images/team_value_elo.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_16_wc_2026_pred/images/africa/team_value_elo.png", width = 12, height = 12, dpi = 300)
+
+# 7) Elo vs Team Value
 
 wc_2026_pred_clean |>
+  filter(country %in% africa) |>
+  ggplot(aes(elo_rating, team_value_euros)) +
+  stat_poly_line() +
+  stat_poly_eq() +
+  geom_point()
+
+wc_2026_pred_clean |>
+  filter(country %in% africa) |>
   ggplot(aes(elo_rating, team_value_euros, size = 5)) + 
   geom_jitter(size = 5) +
   geom_smooth(method=lm , color="black", se=FALSE, size = 1, linetype = "dashed") +
@@ -287,12 +301,7 @@ wc_2026_pred_clean |>
        title = "",
        subtitle = "",
        caption = "") +
-  geom_text_repel(aes(label = ifelse(fifa_ranking_points == 1346.88, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(fifa_ranking_points == 1446.28, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(fifa_ranking_points == 1387.74, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(fifa_ranking_points == 1540.87, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(fifa_ranking_points == 1539.16, country, "")), size = 8) +
-  geom_text_repel(aes(label = ifelse(fifa_ranking_points == 1619.58, country, "")), size = 8) +
+  geom_text_repel(aes(label = country), size = 8) +
   theme(axis.title.x =element_text(size = 28, vjust = 1, face = "bold"),
         axis.title.y =element_text(size = 28, vjust = 1, face = "bold"),
         axis.text.x = element_text(size = 28, face = "bold", color = "black"),
@@ -314,4 +323,4 @@ wc_2026_pred_clean |>
         legend.box.just = "right",
         legend.margin = margin(6, 6, 6, 6))
 
-ggsave("sub_pro_16_wc_2026_pred/images/team_value_fifa.png", width = 12, height = 12, dpi = 300)
+ggsave("sub_pro_16_wc_2026_pred/images/africa/team_value_fifa.png", width = 12, height = 12, dpi = 300)
